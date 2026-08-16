@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>具身智能最小前置知识</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="docs\learning\00_prerequisites.md">
+<meta name="aris:source-sha256" content="8a391b227436caa3f0a5f7c48f81415ddcf14289724356cb1465bc02886fdcb0">
+<meta name="aris:generated-at" content="2026-08-16 15:12 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+nav.toc a.back-home {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+nav.toc a.back-home:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+details.qa { margin: 8px 0; }
+details.qa:hover { border-color: var(--primary-soft); box-shadow: 0 1px 4px rgba(26,74,140,0.06); }
+details summary {
+  cursor: pointer;
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  list-style: none;
+  user-select: none;
+}
+details.qa summary { color: var(--ink); }
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+  color: var(--primary);
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details[open].qa { background: #fdfcf7; }
+details > :not(summary) { padding: 10px 16px; }
+details p:first-of-type { margin-top: 8px; }
+details p:last-of-type { margin-bottom: 10px; }
+
+.study-tools {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+  padding: 10px;
+  background: rgba(253,252,247,0.96);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: 0 2px 10px rgba(26,74,140,0.08);
+  backdrop-filter: blur(8px);
+}
+.study-tools[hidden] { display: none; }
+.study-tools input[type="search"] {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+.study-tools button, .master-btn {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink-soft);
+  padding: 6px 9px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.study-tools button:hover, .master-btn:hover { border-color: var(--primary); color: var(--primary); }
+.study-tools .progress-text { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+.master-btn {
+  float: right;
+  margin: -2px 0 0 10px;
+  padding: 3px 8px;
+}
+.master-btn.is-mastered { background: var(--good-bg); border-color: #6ee7b7; color: var(--good); }
+details.qa.is-mastered { border-left: 4px solid var(--good); }
+details.qa.is-filtered { display: none; }
+
+/* difficulty pills: L1 green / L2 yellow / L3 red */
+.lv {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.lv-l1 { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.lv-l2 { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.lv-l3 { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* frequency badge: 🔥×N */
+.freq {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-soft);
+  color: var(--ink-soft);
+  border: 1px solid var(--border-soft);
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.freq-hot { background: #fff1e6; color: #b8390e; border-color: #fcd9c0; }
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+  .study-tools { top: 0; margin-left: -4px; margin-right: -4px; }
+  .study-tools input[type="search"] { flex-basis: 100%; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <a class="back-home" href="../index.html">← 返回主册</a>
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#0-先看全局机器人是一个闭环系统">0. 先看全局：机器人是一个闭环系统</a>
+</li>
+<li><a href="#1-数据如何进入模型张量形状与坐标">1. 数据如何进入模型：张量、形状与坐标</a>
+</li>
+<li><a href="#2-模型为什么能学函数损失与梯度">2. 模型为什么能学：函数、损失与梯度</a>
+</li>
+<li><a href="#3-时间如何进入问题状态轨迹与-markov-性">3. 时间如何进入问题：状态、轨迹与 Markov 性</a>
+</li>
+<li><a href="#4-两条学习路线模仿与强化">4. 两条学习路线：模仿与强化</a>
+</li>
+<li><a href="#5-动作为什么不能直接执行运动学与控制闭环">5. 动作为什么不能直接执行：运动学与控制闭环</a>
+</li>
+<li><a href="#6-为什么需要状态估计与地图">6. 为什么需要状态估计与地图</a>
+</li>
+<li><a href="#7-仿真世界模型与现实差距">7. 仿真、世界模型与现实差距</a>
+</li>
+<li><a href="#8-把算法变成系统数据频率与验证">8. 把算法变成系统：数据、频率与验证</a>
+</li>
+<li><a href="#最小术语表">最小术语表</a>
+</li>
+<li><a href="#通过标准">通过标准</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<div class="eyebrow">START HERE · PRE-REQUISITES</div>
+<p class="subtitle">先搭认知地图，再刷高频问答</p>
+
+
+<div class="study-tools" hidden aria-label="学习工具">
+  <input id="qa-search" type="search" placeholder="搜索本页题目或关键词…" aria-label="搜索本页题目">
+  <button id="toggle-unmastered" type="button">只看未掌握</button>
+  <button id="collapse-all" type="button">全部折叠</button>
+  <span class="progress-text" id="progress-text"></span>
+</div>
+
+<h1 id="开始刷题前具身智能最小前置知识">开始刷题前：具身智能最小前置知识</h1>
+<blockquote><p>这不是第九卷，而是一张“认知地图”。先把下面 12 个支点搭起来，再进入原题库；遇到陌生名词时回到这里定位它属于感知、决策还是执行。</p></blockquote>
+<p><strong>目标</strong>：不追求一次记住公式，只要求能说清“输入是什么、输出是什么、为什么需要它、它把结果交给谁”。</p>
+<hr />
+<h2 id="0-先看全局机器人是一个闭环系统">0. 先看全局：机器人是一个闭环系统</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">起点</span> <b>P01</b> · 具身智能到底在解决什么问题？</summary>
+<p><strong>一句话</strong>：让智能体在不确定的物理世界中，持续地“观察 → 估计状态 → 决策 → 执行动作 → 再观察”。</p>
+<ul><li><strong>感知</strong>把相机、雷达、触觉等原始信号变成物体、深度、位姿等信息。</li><li><strong>状态估计</strong>把多时刻、多传感器信息融合成“机器人现在在哪里、速度多大、周围是什么”。</li><li><strong>规划 / 策略</strong>根据目标和当前状态决定下一步做什么。</li><li><strong>控制</strong>把高层动作变成关节力矩、位置或速度命令，并用反馈修正误差。</li><li><strong>数据与工程系统</strong>保证时间同步、训练、部署、监控和故障恢复。</li></ul>
+<p><strong>记忆钩子</strong>：感知回答“看到了什么”，估计回答“我在哪里”，规划回答“准备怎么走”，控制回答“这一毫秒怎么动”。</p>
+<p><strong>易错</strong>：VLA 通常只替代其中一部分决策链路，并不自动解决传感器同步、状态估计、安全控制和实时通信。</p>
+</details>
+<h2 id="1-数据如何进入模型张量形状与坐标">1. 数据如何进入模型：张量、形状与坐标</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">数学</span> <b>P02</b> · 为什么看任何模型前都要先写 tensor shape？</summary>
+<p><strong>张量</strong>就是带多个轴的数字数组。图像常写作 <code>[B,C,H,W]</code>，语言 token 是 <code>[B,T]</code>，机器人轨迹可写作 <code>[B,T,D_a]</code>。其中 <code>B</code> 是批量，<code>T</code> 是时间或序列长度，<code>D_a</code> 是动作维数。</p>
+<p>矩阵乘法要求相邻维匹配。Transformer 把输入投影成 <code>Q/K/V</code>，本质上是在最后一个特征维做线性变换；卷积则在空间邻域共享参数。读论文或代码时先在每行旁写 shape，很多“看不懂”会变成普通的维度变换。</p>
+<p><strong>记忆钩子</strong>：先问“每个轴代表什么”，再问“算法做了什么”。</p>
+<p><strong>易错</strong>：序列维和特征维经常被不同库交换；语义相同不代表内存布局相同。</p>
+</details>
+<details class="qa">
+<summary><span class="lv lv-l1">机器人学</span> <b>P03</b> · 为什么同一个位置要注明坐标系？</summary>
+<p>向量 <code>[x,y,z]</code> 只有绑定坐标系才有物理意义。同一个杯子在相机系、机器人基座系和世界系中的坐标不同。齐次变换 <code>T_A_B</code> 同时表达旋转和平移，可把 B 系表示的点转换到 A 系。</p>
+<p>一条典型链路是：相机检测物体 → 通过相机外参转到基座系 → 逆运动学求关节目标 → 控制器跟踪。只要其中一个变换方向、单位或时间戳错了，模型再准也会抓偏。</p>
+<p><strong>记忆钩子</strong>：任何位姿旁边都默念三个问题——“相对谁、什么单位、哪个时刻”。</p>
+<p><strong>下一站</strong>：卷一 §3 的旋转表示、齐次变换、D-H、雅可比和 IK。</p>
+</details>
+<h2 id="2-模型为什么能学函数损失与梯度">2. 模型为什么能学：函数、损失与梯度</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">机器学习</span> <b>P04</b> · 一次训练 step 到底发生了什么？</summary>
+<p>模型 <code>f_θ(x)</code> 用参数 <code>θ</code> 把输入变成预测；损失 <code>L(f_θ(x), y)</code> 衡量预测与目标的差；反向传播用链式法则求 <code>∂L/∂θ</code>；优化器沿降低损失的方向更新参数。</p>
+<p>监督学习的标签 <code>y</code> 来自数据。行为克隆中，<code>x</code> 是观测和指令，<code>y</code> 是专家动作；视觉分类中，<code>y</code> 是类别。强化学习没有逐步专家标签，而是靠奖励评价一串动作的长期结果。</p>
+<p><strong>记忆钩子</strong>：数据定义“学什么”，损失定义“什么算错”，优化器定义“怎么改”。</p>
+<p><strong>易错</strong>：训练损失下降只说明更贴合训练目标，不等于闭环真机成功率提高；分布偏移、时延和数据泄漏都可能让离线指标失真。</p>
+</details>
+<details class="qa">
+<summary><span class="lv lv-l1">深度学习</span> <b>P05</b> · Transformer、CNN 与 MLP 各自在做什么？</summary>
+<ul><li><strong>MLP</strong>：对特征做全连接变换，简单但不显式利用空间或序列结构。</li><li><strong>CNN</strong>：用局部感受野和参数共享提取图像特征，天然具有局部归纳偏置。</li><li><strong>Transformer</strong>：用 Attention 让每个 token 按内容聚合其他 token，适合语言、图像 patch 和多模态序列。</li></ul>
+<p>VLA 常见链路是：视觉编码器把图像变成视觉 token，语言模型融合视觉与指令，动作头输出离散动作 token、连续动作或动作分布。</p>
+<p><strong>记忆钩子</strong>：编码器负责“把输入变成可用表示”，动作头负责“把表示变成机器人命令”。</p>
+<p><strong>下一站</strong>：卷一 §1，再到卷三 §2 和 §5。</p>
+</details>
+<h2 id="3-时间如何进入问题状态轨迹与-markov-性">3. 时间如何进入问题：状态、轨迹与 Markov 性</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">序列</span> <b>P06</b> · 单帧、状态与轨迹有什么区别？</summary>
+<p><strong>观测</strong>是传感器当下给出的信号；<strong>状态</strong>是足以预测未来的系统摘要；<strong>轨迹</strong>是按时间排列的状态、动作和奖励。相机单帧往往看不出速度或遮挡物，因此机器人常处于部分可观测环境，需要历史窗口、RNN/Transformer memory 或滤波器构造 belief。</p>
+<p>Markov 性要求：给定当前状态和动作后，未来与更早历史条件独立。真实机器人通常只拿到不完整、有噪声的观测，所以“状态设计”和“历史长度”是工程问题，不只是公式假设。</p>
+<p><strong>易错</strong>：把 observation 直接称为 state，可能掩盖速度、接触状态或遮挡信息缺失。</p>
+</details>
+<h2 id="4-两条学习路线模仿与强化">4. 两条学习路线：模仿与强化</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">IL / RL</span> <b>P07</b> · 行为克隆和强化学习的根本差别是什么？</summary>
+<p><strong>行为克隆（BC）</strong>把专家的“观测 → 动作”当监督学习，稳定、直接，但部署时一旦走到训练数据没覆盖的状态，错误可能逐步累积。</p>
+<p><strong>强化学习（RL）</strong>根据奖励学习长期决策，能通过试错超越示范，但样本昂贵、训练不稳、奖励设计困难。机器人项目常用“示范预训练 + 仿真 RL 微调 + 安全约束 / 真机校准”的组合。</p>
+<p><strong>记忆钩子</strong>：BC 问“专家会怎么做”，RL 问“怎样做长期回报最高”。</p>
+<p><strong>下一站</strong>：先卷一 §2，再卷二 §1–§4，最后卷三 §1。</p>
+</details>
+<details class="qa">
+<summary><span class="lv lv-l1">RL</span> <b>P08</b> · MDP、Bellman 方程和策略算法是什么关系？</summary>
+<p>MDP 定义问题：状态 <code>s</code>、动作 <code>a</code>、转移、奖励和折扣。价值函数 <code>V/Q</code> 评价“从这里开始未来能拿多少回报”。Bellman 方程把长期回报拆成“当前奖励 + 下一状态价值”，从而可以递推学习。</p>
+<p>值函数方法学习 <code>Q</code> 后选最大值动作；策略梯度直接调整策略概率；Actor-Critic 同时用 Actor 决策、Critic 评价。PPO、SAC、DQN 都是在这张骨架上处理稳定性、探索或样本效率的不同方案。</p>
+<p><strong>记忆钩子</strong>：MDP 是题目，Bellman 是递推关系，算法是求解方法。</p>
+</details>
+<h2 id="5-动作为什么不能直接执行运动学与控制闭环">5. 动作为什么不能直接执行：运动学与控制闭环</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">控制</span> <b>P09</b> · 策略输出、轨迹和电机命令之间隔着什么？</summary>
+<p>高层策略可能输出末端位姿、关节目标、速度或一段 action chunk。运动学把末端目标转换成关节关系；轨迹生成让目标随时间连续；控制器根据反馈误差生成位置、速度或力矩命令；驱动器最终作用于电机。</p>
+<p>控制频率通常高于大模型推理频率，因此系统会用动作分块、插值、低层策略或 MPC/WBC 在两次高层推理间持续闭环。安全层还会检查关节限位、速度、碰撞和急停。</p>
+<p><strong>记忆钩子</strong>：策略说“去哪”，控制器负责“稳稳地到”。</p>
+<p><strong>下一站</strong>：卷一 §3；腿足方向再读卷六 §1–§3。</p>
+</details>
+<h2 id="6-为什么需要状态估计与地图">6. 为什么需要状态估计与地图</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">感知 / 导航</span> <b>P10</b> · 检测、定位、建图和规划如何串起来？</summary>
+<p>检测 / 分割回答“物体或可通行区域在哪里”；深度与点云恢复三维几何；SLAM / VIO 融合跨帧视觉与 IMU，估计自身位姿并维护地图；全局规划在地图上找路线，局部规划结合实时障碍生成短时动作；控制器执行并反馈。</p>
+<p>语言导航和 ObjectNav 在这条链路上增加语义目标：VLM/CLIP 等模型帮助识别“要找什么”，但几何可达性、定位漂移和碰撞约束仍需处理。</p>
+<p><strong>下一站</strong>：卷七建议按 §1 → §3 → §4 → §7 → §5/§6 → §8 阅读。</p>
+</details>
+<h2 id="7-仿真世界模型与现实差距">7. 仿真、世界模型与现实差距</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">Sim2Real</span> <b>P11</b> · 仿真器和世界模型是不是一回事？</summary>
+<p><strong>仿真器</strong>由物理引擎和场景规则推进系统，通常由人设计、可直接产生传感器与动力学数据。<strong>世界模型</strong>从数据学习环境动态，在潜空间预测未来，可用于想象训练或规划。两者都能减少真机试错，但误差来源不同。</p>
+<p>Sim2Real 关注训练环境与真机的差异：视觉、动力学、接触、执行器、时延和传感器噪声。域随机化让策略见到多种可能世界；系统辨识让仿真参数更接近真机；教师—学生方法让仿真中的特权信息迁移到只用真实观测的策略。</p>
+<p><strong>下一站</strong>：卷四，再回看卷二 §7 与卷三 §7。</p>
+</details>
+<h2 id="8-把算法变成系统数据频率与验证">8. 把算法变成系统：数据、频率与验证</h2>
+<details class="qa">
+<summary><span class="lv lv-l1">工程</span> <b>P12</b> · 一个可落地的具身系统最容易在哪些接口失败？</summary>
+<p>常见失败点不是单个模型，而是接口：传感器时间戳错位、坐标变换方向错误、训练与部署归一化不一致、动作单位不一致、推理抖动、控制频率断层、日志缺字段、离线评测与真机目标不一致。</p>
+<p>排查时按链路固定顺序：输入是否正确 → 预处理是否一致 → 模型输出是否合理 → 后处理 / 坐标 / 单位是否正确 → 控制器是否跟踪 → 环境是否超出数据分布。一次只改一个变量，并保存可复现的日志与视频。</p>
+<p><strong>记忆钩子</strong>：端到端模型不等于端到端责任；系统每一段都要有可观测指标。</p>
+<p><strong>下一站</strong>：卷三 §A 与卷五 §1、§4、§5。</p>
+</details>
+<hr />
+<h2 id="最小术语表">最小术语表</h2>
+<table><thead><tr><th>术语</th><th>最短理解</th><th>它连接到</th></tr></thead><tbody><tr><td>Observation</td><td>传感器实际看到的信号</td><td>感知、POMDP</td></tr><tr><td>State / Belief</td><td>对当前系统的充分或近似摘要</td><td>估计、规划、RL</td></tr><tr><td>Policy</td><td>从观测 / 状态到动作的映射</td><td>BC、RL、VLA</td></tr><tr><td>Value / Q</td><td>对未来累计回报的估计</td><td>Bellman、Actor-Critic</td></tr><tr><td>Representation</td><td>模型内部可计算的特征</td><td>CNN、Transformer、VLM</td></tr><tr><td>Pose</td><td>位置 + 姿态</td><td>坐标变换、SLAM、控制</td></tr><tr><td>Trajectory</td><td>按时间排列的状态与动作</td><td>规划、示教、回放</td></tr><tr><td>Dynamics</td><td>状态在动作作用下如何变化</td><td>控制、仿真、世界模型</td></tr><tr><td>Closed loop</td><td>根据新反馈不断修正动作</td><td>控制、在线策略、安全</td></tr><tr><td>Distribution shift</td><td>训练与部署遇到的数据不同</td><td>BC 误差、Sim2Real、泛化</td></tr></tbody></table>
+<hr />
+<h2 id="通过标准">通过标准</h2>
+<p>如果你能不看答案画出“传感器 → 感知 → 状态估计 → 策略 / 规划 → 控制 → 电机 → 新观测”，并解释 BC、RL、VLA、世界模型分别放在哪一段，就可以进入<a href="../roadmap.html">顺序学习路线</a>。如果还不顺，第二天只复述 P01、P03、P07、P09、P12，不要急着刷更多题。</p>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>docs\learning\00_prerequisites.md</code> ·
+  SHA256 <code>8a391b227436</code> ·
+  generated at 2026-08-16 15:12 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+<script>
+(function () {
+  const cards = Array.from(document.querySelectorAll('details.qa'));
+  const tools = document.querySelector('.study-tools');
+  if (!cards.length || !tools) return;
+  tools.hidden = false;
+
+  const storageKey = 'q2a-mastered-v1';
+  let mastered = new Set();
+  try { mastered = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]')); } catch (_) {}
+  const pathKey = location.pathname.replace(/\/$/, '') || '/';
+  const search = document.getElementById('qa-search');
+  const toggle = document.getElementById('toggle-unmastered');
+  const progress = document.getElementById('progress-text');
+  let onlyUnmastered = false;
+
+  function idFor(card, index) {
+    const summary = card.querySelector('summary').cloneNode(true);
+    const button = summary.querySelector('.master-btn');
+    if (button) button.remove();
+    return pathKey + '::' + index + '::' + summary.textContent.trim();
+  }
+  function save() {
+    try { localStorage.setItem(storageKey, JSON.stringify(Array.from(mastered))); } catch (_) {}
+  }
+  function refresh() {
+    const query = search.value.trim().toLowerCase();
+    let done = 0;
+    cards.forEach((card, index) => {
+      const id = idFor(card, index);
+      const isDone = mastered.has(id);
+      if (isDone) done += 1;
+      card.classList.toggle('is-mastered', isDone);
+      const matches = !query || card.textContent.toLowerCase().includes(query);
+      card.classList.toggle('is-filtered', !matches || (onlyUnmastered && isDone));
+      const button = card.querySelector('.master-btn');
+      if (button) {
+        button.classList.toggle('is-mastered', isDone);
+        button.textContent = isDone ? '✓ 已掌握' : '标记掌握';
+        button.setAttribute('aria-pressed', String(isDone));
+      }
+    });
+    progress.textContent = '本页 ' + done + ' / ' + cards.length + ' 已掌握';
+    toggle.textContent = onlyUnmastered ? '显示全部' : '只看未掌握';
+  }
+
+  cards.forEach((card, index) => {
+    const summary = card.querySelector('summary');
+    if (!summary) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'master-btn';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const id = idFor(card, index);
+      mastered.has(id) ? mastered.delete(id) : mastered.add(id);
+      save();
+      refresh();
+    });
+    summary.appendChild(button);
+  });
+  search.addEventListener('input', refresh);
+  toggle.addEventListener('click', function () { onlyUnmastered = !onlyUnmastered; refresh(); });
+  document.getElementById('collapse-all').addEventListener('click', function () {
+    cards.forEach(card => { card.open = false; });
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>
