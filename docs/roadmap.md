@@ -25,6 +25,8 @@
 
 **为什么它排第一**：后面的 Attention、PPO、SLAM、MPC 都只是闭环中的部件。先有地图，术语才有挂载位置。
 
+> **直达阅读**：[进入阶段 0 · 最小前置知识 →](learning/00_prerequisites.html)
+
 ---
 
 ## 阶段 1 · 机器学习共同语言
@@ -32,13 +34,15 @@
 **先修**：阶段 0 的张量、输入 / 输出、闭环概念。  
 **阅读顺序**：
 
-1. [卷一 §1 深度学习基础](interviews/01_basics.html#1-深度学习基础20-题--1-补充)：先 Q02、Q07、Q19，再 Q04、Q10、Q12、Q13。
+1. 卷一 §1 深度学习基础：先 Q02、Q07、Q19，再 Q04、Q10、Q12、Q13。
 2. 再读 Q06、Q03、Q05，理解深层网络为什么能稳定训练。
 3. 最后读 Q01、Q08、Q14、Q18，把 Attention、位置和视觉 token 串起来。
 4. 手撕只做 H04（LayerNorm）和 H01（Attention）；其余先跳过。
 
 **因果链**：数据与任务 → 损失 → 梯度 → 优化器 → 稳定训练 → 表示学习 → Transformer。  
 **通过标准**：能用同一套“输入—模型—损失—更新—评测”框架解释分类、行为克隆和动作预测。
+
+> **直达阅读**：[进入阶段 1 · 机器学习顺序题单 →](stages/01_ml_foundations.html)
 
 ---
 
@@ -47,12 +51,14 @@
 **先修**：向量 / 矩阵、阶段 0 的坐标系与闭环。  
 **阅读顺序**：
 
-1. [卷一 §3 机器人学基础](interviews/01_basics.html#3-机器人学基础10-题)：Q35 姿态 → Q36 坐标变换 → Q37 正运动学 → Q39 雅可比 → Q38 逆运动学。
+1. 卷一 §3 机器人学基础：Q35 姿态 → Q36 坐标变换 → Q37 正运动学 → Q39 雅可比 → Q38 逆运动学。
 2. 接着 Q43 工作空间、Q41 关节 / 任务空间、Q40 PID、Q42 阻抗、Q44 控制频率。
 3. 手撕先做卷六 CH09（齐次变换），再做 CH07（数值 IK）和 CH01（PID）。
 
 **因果链**：目标位姿 → 坐标变换 → IK / 轨迹 → 控制误差 → 电机命令 → 新反馈。  
 **通过标准**：别人给你“末端向前移动 5 cm”，你能说清从哪个坐标系开始、如何变成关节命令、为什么还需要反馈控制。
+
+> **直达阅读**：[进入阶段 2 · 机器人学与控制顺序题单 →](stages/02_robotics_control.html)
 
 ---
 
@@ -61,13 +67,15 @@
 **先修**：概率直觉、损失与梯度、状态 / 动作 / 轨迹。  
 **阅读顺序**：
 
-1. [卷一 §2 强化学习基础](interviews/01_basics.html#2-强化学习基础14-题)：Q21 MDP → Q28 折扣 → Q22 Bellman → Q24 MC / TD。
+1. 卷一 §2 强化学习基础：Q21 MDP → Q28 折扣 → Q22 Bellman → Q24 MC / TD。
 2. 两条分支：Q23 Q-learning（值函数路线）；Q25 Policy Gradient → Q26 Actor-Critic（策略路线）。
 3. 合流到 Q27 on/off-policy、Q30 Advantage，再看 Q31 PPO、Q32 SAC、Q33 Offline RL。
-4. 进入[卷二 §1–§4](interviews/02_rl_algo.html#1-策略优化基础8-题)，按“问题—改进”理解算法，不背孤立缩写。
+4. 进入卷二 §1–§4，按“问题—改进”理解算法，不背孤立缩写。
 
 **因果链**：MDP 定义任务 → Bellman 评价未来 → TD 从数据更新 → Actor 选择动作 / Critic 降方差 → PPO 或 SAC 稳定训练。  
 **通过标准**：能回答“为什么 PPO 是 on-policy、SAC 是 off-policy，以及这对数据复用有什么影响”。
+
+> **直达阅读**：[进入阶段 3 · 强化学习顺序题单 →](stages/03_rl_backbone.html)
 
 ---
 
@@ -76,14 +84,16 @@
 **先修**：阶段 1 的 Transformer，阶段 2 的动作 / 控制，阶段 3 的策略概念。  
 **阅读顺序**：
 
-1. [卷三 §1](interviews/03_vla_il.html#1-模仿学习理论基础8-题)：Q01 BC → Q02 DAgger / GAIL / IRL，先理解示范学习的分布偏移。
-2. [卷三 §5](interviews/03_vla_il.html#5-视觉-语言对齐--数据7-题)：Q30 VLM vs VLA → Q28 数据集 → Q29 视觉编码 → Q31 多模态连接器。
-3. [卷三 §4](interviews/03_vla_il.html#4-action-chunking--act4-题)：Q24 Action Chunking → Q26 复合误差 → Q25 ACT。
-4. [卷三 §3](interviews/03_vla_il.html#3-diffusion-policy--flow-matching6-题)：Q18 Diffusion Policy → Q20 Diffusion vs Flow Matching → Q19 π0。
-5. 最后读[卷三 §2](interviews/03_vla_il.html#2-vla-模型架构时间线9-题)，把 RT-1 / RT-2 / OpenVLA / π 系列放回已经理解的组件框架中。
+1. 卷三 §1：Q01 BC → Q02 DAgger / GAIL / IRL，先理解示范学习的分布偏移。
+2. 卷三 §5：Q30 VLM vs VLA → Q28 数据集 → Q29 视觉编码 → Q31 多模态连接器。
+3. 卷三 §4：Q24 Action Chunking → Q26 复合误差 → Q25 ACT。
+4. 卷三 §3：Q18 Diffusion Policy → Q20 Diffusion vs Flow Matching → Q19 π0。
+5. 最后读卷三 §2，把 RT-1 / RT-2 / OpenVLA / π 系列放回已经理解的组件框架中。
 
 **组件链**：图像 / 语言 / 本体感觉 → 编码与对齐 → 跨模态主干 → 动作头 → action chunk → 低层控制。  
 **通过标准**：看到一个新 VLA，能主动问 backbone、视觉编码器、融合方式、动作表示、训练数据、推理频率和控制接口。
+
+> **直达阅读**：[进入阶段 4 · 模仿学习到 VLA 顺序题单 →](stages/04_vla_il.html)
 
 ---
 
@@ -92,13 +102,15 @@
 **先修**：轨迹、动力学、BC / RL。  
 **阅读顺序**：
 
-1. [卷四 §3](interviews/04_world_sim.html#3-sim2real-基础6-题)：先建立 reality gap 分类。
-2. [卷四 §4–§6](interviews/04_world_sim.html#4-teacher-student--自适应方法4-题)：域随机化、系统辨识、teacher-student、仿真器与真机验证。
-3. 回到[卷四 §1–§2](interviews/04_world_sim.html#1-世界模型基础5-题)：RSSM → latent imagination → Dreamer 演进。
-4. 衔接[卷二 Offline RL](interviews/02_rl_algo.html#5-offline-rl6-题)和[卷五数据飞轮](interviews/05_engineering.html#4-数据飞轮与采集6-题)。
+1. 卷四 §3：先建立 reality gap 分类。
+2. 卷四 §4–§6：域随机化、系统辨识、teacher-student、仿真器与真机验证。
+3. 回到卷四 §1–§2：RSSM → latent imagination → Dreamer 演进。
+4. 衔接卷二 Offline RL 和卷五数据飞轮。
 
 **因果链**：真机数据昂贵 → 示教 / 仿真扩大数据 → 分布差异产生 gap → 随机化 / 辨识 / 自适应缩小 gap → 世界模型在学习空间中预测未来。  
 **通过标准**：能区分“仿真器、学习到的世界模型、域随机化、系统辨识”各自解决什么问题。
+
+> **直达阅读**：[进入阶段 5 · Sim2Real 与世界模型顺序题单 →](stages/05_sim2real_world_models.html)
 
 ---
 
@@ -107,13 +119,15 @@
 **先修**：至少完成阶段 0–4；最好有一次训练或机器人实验。  
 **阅读顺序**：
 
-1. [卷五 §1](interviews/05_engineering.html#1-感知-规划-控制系统架构5-题)：系统分层、ROS 2、通信与任务编排。
-2. [卷三 §A](interviews/03_vla_il.html#a-项目拷打--工程实现16-题)：从观测 / 动作设计进入数据链路、同步、清洗和真机故障。
-3. [卷五 §4–§5](interviews/05_engineering.html#4-数据飞轮与采集6-题)：采集闭环和固定排障顺序。
-4. [卷五 §2–§3](interviews/05_engineering.html#2-推理加速与边缘部署8-题)：模型能工作以后，再学量化、TensorRT、FSDP 和显存估算。
+1. 卷五 §1：系统分层、ROS 2、通信与任务编排。
+2. 卷三 §A：从观测 / 动作设计进入数据链路、同步、清洗和真机故障。
+3. 卷五 §4–§5：采集闭环和固定排障顺序。
+4. 卷五 §2–§3：模型能工作以后，再学量化、TensorRT、FSDP 和显存估算。
 
 **因果链**：需求与指标 → 数据 schema → 训练 → 离线评测 → 部署 → 真机观测 → 定位失败 → 数据回流。  
 **通过标准**：面对“loss 降了但真机不动”，能按输入、预处理、模型、后处理、坐标 / 单位、控制、分布偏移依次排查。
+
+> **直达阅读**：[进入阶段 6 · 工程落地与排障顺序题单 →](stages/06_engineering_debugging.html)
 
 ---
 
@@ -121,19 +135,25 @@
 
 按阶段 4 全卷 → 卷五 §2、§4、§5 → 卷四 Sim2Real → 卷八系统设计。重点把“数据采集—动作表示—控制频率—真机评测”连成一个项目故事。不要只背模型版本号。
 
+> **直达阅读**：[进入阶段 7A · 操作 / VLA 岗顺序题单 →](stages/07a_vla_track.html)
+
 ## 阶段 7B · 人形 / 四足控制岗支线
 
-[卷六](interviews/06_legged_control.html)按 §1 动力学 → §2 MPC → §3 WBC → §4 RL locomotion → §7 Sim2Real → §5 遥操作 → §6 loco-manipulation。经典控制是低层骨架，RL 是策略和适应层，VLA 通常在更高层。
+卷六按 §1 动力学 → §2 MPC → §3 WBC → §4 RL locomotion → §7 Sim2Real → §5 遥操作 → §6 loco-manipulation。经典控制是低层骨架，RL 是策略和适应层，VLA 通常在更高层。
+
+> **直达阅读**：[进入阶段 7B · 人形 / 四足控制岗顺序题单 →](stages/07b_legged_track.html)
 
 ## 阶段 7C · 感知 / SLAM / 导航岗支线
 
-[卷七](interviews/07_perception_nav.html)按 §1 3D 感知 → §3 SLAM → §4 经典导航 → §7 Embodied VLM → §5 VLN / §6 ObjectNav → §8 端到端判断。先有几何与定位，再谈语言语义。
+卷七按 §1 3D 感知 → §3 SLAM → §4 经典导航 → §7 Embodied VLM → §5 VLN / §6 ObjectNav → §8 端到端判断。先有几何与定位，再谈语言语义。
+
+> **直达阅读**：[进入阶段 7C · 感知 / SLAM / 导航岗顺序题单 →](stages/07c_navigation_track.html)
 
 ---
 
 ## 阶段 8 · Coding 与系统设计收口
 
-[卷八](interviews/08_coding_systemdesign.html)不要按原频次硬刷，建议按数据结构成组：
+卷八不要按原频次硬刷，建议按数据结构成组：
 
 1. 数组 / 哈希 / 滑窗：Q11、Q01、Q03、Q14、Q17。
 2. 链表：Q02、Q13、Q27、Q07、Q20。
@@ -143,6 +163,8 @@
 6. 最后用 Q31–Q40 检验能否把前面所有模块连成系统。
 
 **通过标准**：系统设计时先讲需求与指标，再画数据流和频率边界，最后讲模型、部署、监控、失败恢复与取舍。
+
+> **直达阅读**：[进入阶段 8 · Coding 与系统设计顺序题单 →](stages/08_coding_system_design.html)
 
 ---
 
@@ -174,4 +196,3 @@
 4. **隔天复述**：第二天只看题目；第 7 天再做一次。卡住才看答案。
 
 真正需要记住的不是 425 段文字，而是约 20 条稳定的因果链。原题库是这些链上的检索点。
-

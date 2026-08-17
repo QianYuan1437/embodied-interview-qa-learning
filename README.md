@@ -1,6 +1,6 @@
 # 具身智能高频面试题库
 
-> 本仓库在 [WinstonJQ/embodied-interview-qa](https://github.com/WinstonJQ/embodied-interview-qa) 的 MIT 许可内容基础上，新增了面向前置知识薄弱读者的**顺序学习版**：最小前置知识、跨卷依赖路线、28 天学习计划，以及浏览器本地的搜索 / 掌握标记 / 未掌握筛选。原始八卷问答内容保留为速查层。
+> 本仓库在 [WinstonJQ/embodied-interview-qa](https://github.com/WinstonJQ/embodied-interview-qa) 的 MIT 许可内容基础上，新增了面向前置知识薄弱读者的**顺序学习版**：最小前置知识、跨卷依赖路线、每阶段可连续阅读的重排题单、28 天学习计划，以及浏览器本地的搜索 / 掌握标记 / 未掌握筛选。原始八卷问答内容保留为速查层。
 
 > 中文具身智能（Embodied AI）秋招高频面试题库 · 题目来自公开面经，频次合并后入卷，每题答案经独立 AI 二次审查  
 > *A Chinese-language interview question bank for Embodied-AI engineering roles (VLA / IL / RL / World Models / Engineering).*

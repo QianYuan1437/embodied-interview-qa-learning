@@ -807,6 +807,11 @@ def main(argv: list[str] | None = None) -> int:
         default="../index.html",
         help="Relative link used by the '返回主册' button (default: ../index.html)",
     )
+    ap.add_argument(
+        "--home-label",
+        default="← 返回主册",
+        help="Label used by the back button (default: ← 返回主册)",
+    )
     ap.add_argument("--state", help="Optional sidecar state JSON to append as <details>")
     ap.add_argument("--json", dest="json_sidecar", help="Optional sidecar JSON to append (e.g., KILL_ARGUMENT.json)")
     ap.add_argument("--offline", action="store_true", help="Skip MathJax / highlight.js CDN blocks")
@@ -885,6 +890,7 @@ def main(argv: list[str] | None = None) -> int:
     vars_ = {
         "LANG": html_lib.escape(args.lang, quote=True),
         "HOME_HREF": html_lib.escape(args.home_href, quote=True),
+        "HOME_LABEL": html_lib.escape(args.home_label),
         "TITLE": html_lib.escape(title),
         "SUBTITLE_BLOCK": subtitle_block,
         "EYEBROW_BLOCK": eyebrow_block,

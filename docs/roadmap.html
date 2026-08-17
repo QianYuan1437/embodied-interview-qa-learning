@@ -7,8 +7,8 @@
 
 <meta name="generator" content="ARIS render-html (academic, v1)">
 <meta name="aris:source-path" content="docs\roadmap.md">
-<meta name="aris:source-sha256" content="c7f5637236c81cd3c3c5a53191b05acf45ee85ac74ee2d25f7dca676ccffcec7">
-<meta name="aris:generated-at" content="2026-08-16 15:12 UTC">
+<meta name="aris:source-sha256" content="b3b2e04c3499cb0d80e880ad54c724706cdeda2d9070abdccadbfc4a41e6897b">
+<meta name="aris:generated-at" content="2026-08-17 08:11 UTC">
 
 <!-- MathJax 3 -->
 <script>
@@ -394,6 +394,23 @@ details.qa.is-filtered { display: none; }
   line-height: 1.5;
 }
 .freq-hot { background: #fff1e6; color: #b8390e; border-color: #fcd9c0; }
+.seq {
+  display: inline-block;
+  min-width: 28px;
+  margin-right: 6px;
+  color: white;
+  background: var(--primary);
+  border-radius: 3px;
+  text-align: center;
+  font: 700 11px/1.7 "JetBrains Mono", monospace;
+}
+.origin {
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--ink-muted);
+  font: 600 10px/1.7 "JetBrains Mono", monospace;
+  letter-spacing: .03em;
+}
 
 mjx-container[display="true"] { margin: 12px 0 !important; }
 
@@ -489,48 +506,59 @@ footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--
 <h2 id="阶段-0--建立系统地图">阶段 0 · 建立系统地图</h2>
 <p><strong>先修</strong>：无。 <strong>核心问题</strong>：一个机器人怎样从“看到指令”走到“电机真的动起来”？ <strong>学习材料</strong>：<a href="learning/00_prerequisites.html">最小前置知识</a>，重点 P01、P03、P07、P09、P12。 <strong>通过标准</strong>：能画出 sense → estimate → decide → control → act 的闭环，并把 VLA 放到其中，而不是把 VLA 当成整台机器人。</p>
 <p><strong>为什么它排第一</strong>：后面的 Attention、PPO、SLAM、MPC 都只是闭环中的部件。先有地图，术语才有挂载位置。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="learning/00_prerequisites.html">进入阶段 0 · 最小前置知识 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-1--机器学习共同语言">阶段 1 · 机器学习共同语言</h2>
 <p><strong>先修</strong>：阶段 0 的张量、输入 / 输出、闭环概念。 <strong>阅读顺序</strong>：</p>
-<ol><li><a href="interviews/01_basics.html#1-深度学习基础20-题--1-补充">卷一 §1 深度学习基础</a>：先 Q02、Q07、Q19，再 Q04、Q10、Q12、Q13。</li><li>再读 Q06、Q03、Q05，理解深层网络为什么能稳定训练。</li><li>最后读 Q01、Q08、Q14、Q18，把 Attention、位置和视觉 token 串起来。</li><li>手撕只做 H04（LayerNorm）和 H01（Attention）；其余先跳过。</li></ol>
+<ol><li>卷一 §1 深度学习基础：先 Q02、Q07、Q19，再 Q04、Q10、Q12、Q13。</li><li>再读 Q06、Q03、Q05，理解深层网络为什么能稳定训练。</li><li>最后读 Q01、Q08、Q14、Q18，把 Attention、位置和视觉 token 串起来。</li><li>手撕只做 H04（LayerNorm）和 H01（Attention）；其余先跳过。</li></ol>
 <p><strong>因果链</strong>：数据与任务 → 损失 → 梯度 → 优化器 → 稳定训练 → 表示学习 → Transformer。 <strong>通过标准</strong>：能用同一套“输入—模型—损失—更新—评测”框架解释分类、行为克隆和动作预测。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/01_ml_foundations.html">进入阶段 1 · 机器学习顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-2--机器人学与控制闭环">阶段 2 · 机器人学与控制闭环</h2>
 <p><strong>先修</strong>：向量 / 矩阵、阶段 0 的坐标系与闭环。 <strong>阅读顺序</strong>：</p>
-<ol><li><a href="interviews/01_basics.html#3-机器人学基础10-题">卷一 §3 机器人学基础</a>：Q35 姿态 → Q36 坐标变换 → Q37 正运动学 → Q39 雅可比 → Q38 逆运动学。</li><li>接着 Q43 工作空间、Q41 关节 / 任务空间、Q40 PID、Q42 阻抗、Q44 控制频率。</li><li>手撕先做卷六 CH09（齐次变换），再做 CH07（数值 IK）和 CH01（PID）。</li></ol>
+<ol><li>卷一 §3 机器人学基础：Q35 姿态 → Q36 坐标变换 → Q37 正运动学 → Q39 雅可比 → Q38 逆运动学。</li><li>接着 Q43 工作空间、Q41 关节 / 任务空间、Q40 PID、Q42 阻抗、Q44 控制频率。</li><li>手撕先做卷六 CH09（齐次变换），再做 CH07（数值 IK）和 CH01（PID）。</li></ol>
 <p><strong>因果链</strong>：目标位姿 → 坐标变换 → IK / 轨迹 → 控制误差 → 电机命令 → 新反馈。 <strong>通过标准</strong>：别人给你“末端向前移动 5 cm”，你能说清从哪个坐标系开始、如何变成关节命令、为什么还需要反馈控制。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/02_robotics_control.html">进入阶段 2 · 机器人学与控制顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-3--强化学习骨架">阶段 3 · 强化学习骨架</h2>
 <p><strong>先修</strong>：概率直觉、损失与梯度、状态 / 动作 / 轨迹。 <strong>阅读顺序</strong>：</p>
-<ol><li><a href="interviews/01_basics.html#2-强化学习基础14-题">卷一 §2 强化学习基础</a>：Q21 MDP → Q28 折扣 → Q22 Bellman → Q24 MC / TD。</li><li>两条分支：Q23 Q-learning（值函数路线）；Q25 Policy Gradient → Q26 Actor-Critic（策略路线）。</li><li>合流到 Q27 on/off-policy、Q30 Advantage，再看 Q31 PPO、Q32 SAC、Q33 Offline RL。</li><li>进入<a href="interviews/02_rl_algo.html#1-策略优化基础8-题">卷二 §1–§4</a>，按“问题—改进”理解算法，不背孤立缩写。</li></ol>
+<ol><li>卷一 §2 强化学习基础：Q21 MDP → Q28 折扣 → Q22 Bellman → Q24 MC / TD。</li><li>两条分支：Q23 Q-learning（值函数路线）；Q25 Policy Gradient → Q26 Actor-Critic（策略路线）。</li><li>合流到 Q27 on/off-policy、Q30 Advantage，再看 Q31 PPO、Q32 SAC、Q33 Offline RL。</li><li>进入卷二 §1–§4，按“问题—改进”理解算法，不背孤立缩写。</li></ol>
 <p><strong>因果链</strong>：MDP 定义任务 → Bellman 评价未来 → TD 从数据更新 → Actor 选择动作 / Critic 降方差 → PPO 或 SAC 稳定训练。 <strong>通过标准</strong>：能回答“为什么 PPO 是 on-policy、SAC 是 off-policy，以及这对数据复用有什么影响”。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/03_rl_backbone.html">进入阶段 3 · 强化学习顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-4--模仿学习到-vla">阶段 4 · 模仿学习到 VLA</h2>
 <p><strong>先修</strong>：阶段 1 的 Transformer，阶段 2 的动作 / 控制，阶段 3 的策略概念。 <strong>阅读顺序</strong>：</p>
-<ol><li><a href="interviews/03_vla_il.html#1-模仿学习理论基础8-题">卷三 §1</a>：Q01 BC → Q02 DAgger / GAIL / IRL，先理解示范学习的分布偏移。</li><li><a href="interviews/03_vla_il.html#5-视觉-语言对齐--数据7-题">卷三 §5</a>：Q30 VLM vs VLA → Q28 数据集 → Q29 视觉编码 → Q31 多模态连接器。</li><li><a href="interviews/03_vla_il.html#4-action-chunking--act4-题">卷三 §4</a>：Q24 Action Chunking → Q26 复合误差 → Q25 ACT。</li><li><a href="interviews/03_vla_il.html#3-diffusion-policy--flow-matching6-题">卷三 §3</a>：Q18 Diffusion Policy → Q20 Diffusion vs Flow Matching → Q19 π0。</li><li>最后读<a href="interviews/03_vla_il.html#2-vla-模型架构时间线9-题">卷三 §2</a>，把 RT-1 / RT-2 / OpenVLA / π 系列放回已经理解的组件框架中。</li></ol>
+<ol><li>卷三 §1：Q01 BC → Q02 DAgger / GAIL / IRL，先理解示范学习的分布偏移。</li><li>卷三 §5：Q30 VLM vs VLA → Q28 数据集 → Q29 视觉编码 → Q31 多模态连接器。</li><li>卷三 §4：Q24 Action Chunking → Q26 复合误差 → Q25 ACT。</li><li>卷三 §3：Q18 Diffusion Policy → Q20 Diffusion vs Flow Matching → Q19 π0。</li><li>最后读卷三 §2，把 RT-1 / RT-2 / OpenVLA / π 系列放回已经理解的组件框架中。</li></ol>
 <p><strong>组件链</strong>：图像 / 语言 / 本体感觉 → 编码与对齐 → 跨模态主干 → 动作头 → action chunk → 低层控制。 <strong>通过标准</strong>：看到一个新 VLA，能主动问 backbone、视觉编码器、融合方式、动作表示、训练数据、推理频率和控制接口。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/04_vla_il.html">进入阶段 4 · 模仿学习到 VLA 顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-5--数据sim2real-与世界模型">阶段 5 · 数据、Sim2Real 与世界模型</h2>
 <p><strong>先修</strong>：轨迹、动力学、BC / RL。 <strong>阅读顺序</strong>：</p>
-<ol><li><a href="interviews/04_world_sim.html#3-sim2real-基础6-题">卷四 §3</a>：先建立 reality gap 分类。</li><li><a href="interviews/04_world_sim.html#4-teacher-student--自适应方法4-题">卷四 §4–§6</a>：域随机化、系统辨识、teacher-student、仿真器与真机验证。</li><li>回到<a href="interviews/04_world_sim.html#1-世界模型基础5-题">卷四 §1–§2</a>：RSSM → latent imagination → Dreamer 演进。</li><li>衔接<a href="interviews/02_rl_algo.html#5-offline-rl6-题">卷二 Offline RL</a>和<a href="interviews/05_engineering.html#4-数据飞轮与采集6-题">卷五数据飞轮</a>。</li></ol>
+<ol><li>卷四 §3：先建立 reality gap 分类。</li><li>卷四 §4–§6：域随机化、系统辨识、teacher-student、仿真器与真机验证。</li><li>回到卷四 §1–§2：RSSM → latent imagination → Dreamer 演进。</li><li>衔接卷二 Offline RL 和卷五数据飞轮。</li></ol>
 <p><strong>因果链</strong>：真机数据昂贵 → 示教 / 仿真扩大数据 → 分布差异产生 gap → 随机化 / 辨识 / 自适应缩小 gap → 世界模型在学习空间中预测未来。 <strong>通过标准</strong>：能区分“仿真器、学习到的世界模型、域随机化、系统辨识”各自解决什么问题。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/05_sim2real_world_models.html">进入阶段 5 · Sim2Real 与世界模型顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-6--工程落地与项目排障">阶段 6 · 工程落地与项目排障</h2>
 <p><strong>先修</strong>：至少完成阶段 0–4；最好有一次训练或机器人实验。 <strong>阅读顺序</strong>：</p>
-<ol><li><a href="interviews/05_engineering.html#1-感知-规划-控制系统架构5-题">卷五 §1</a>：系统分层、ROS 2、通信与任务编排。</li><li><a href="interviews/03_vla_il.html#a-项目拷打--工程实现16-题">卷三 §A</a>：从观测 / 动作设计进入数据链路、同步、清洗和真机故障。</li><li><a href="interviews/05_engineering.html#4-数据飞轮与采集6-题">卷五 §4–§5</a>：采集闭环和固定排障顺序。</li><li><a href="interviews/05_engineering.html#2-推理加速与边缘部署8-题">卷五 §2–§3</a>：模型能工作以后，再学量化、TensorRT、FSDP 和显存估算。</li></ol>
+<ol><li>卷五 §1：系统分层、ROS 2、通信与任务编排。</li><li>卷三 §A：从观测 / 动作设计进入数据链路、同步、清洗和真机故障。</li><li>卷五 §4–§5：采集闭环和固定排障顺序。</li><li>卷五 §2–§3：模型能工作以后，再学量化、TensorRT、FSDP 和显存估算。</li></ol>
 <p><strong>因果链</strong>：需求与指标 → 数据 schema → 训练 → 离线评测 → 部署 → 真机观测 → 定位失败 → 数据回流。 <strong>通过标准</strong>：面对“loss 降了但真机不动”，能按输入、预处理、模型、后处理、坐标 / 单位、控制、分布偏移依次排查。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/06_engineering_debugging.html">进入阶段 6 · 工程落地与排障顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-7a--操作--vla-岗支线">阶段 7A · 操作 / VLA 岗支线</h2>
 <p>按阶段 4 全卷 → 卷五 §2、§4、§5 → 卷四 Sim2Real → 卷八系统设计。重点把“数据采集—动作表示—控制频率—真机评测”连成一个项目故事。不要只背模型版本号。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/07a_vla_track.html">进入阶段 7A · 操作 / VLA 岗顺序题单 →</a></p></blockquote>
 <h2 id="阶段-7b--人形--四足控制岗支线">阶段 7B · 人形 / 四足控制岗支线</h2>
-<p><a href="interviews/06_legged_control.html">卷六</a>按 §1 动力学 → §2 MPC → §3 WBC → §4 RL locomotion → §7 Sim2Real → §5 遥操作 → §6 loco-manipulation。经典控制是低层骨架，RL 是策略和适应层，VLA 通常在更高层。</p>
+<p>卷六按 §1 动力学 → §2 MPC → §3 WBC → §4 RL locomotion → §7 Sim2Real → §5 遥操作 → §6 loco-manipulation。经典控制是低层骨架，RL 是策略和适应层，VLA 通常在更高层。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/07b_legged_track.html">进入阶段 7B · 人形 / 四足控制岗顺序题单 →</a></p></blockquote>
 <h2 id="阶段-7c--感知--slam--导航岗支线">阶段 7C · 感知 / SLAM / 导航岗支线</h2>
-<p><a href="interviews/07_perception_nav.html">卷七</a>按 §1 3D 感知 → §3 SLAM → §4 经典导航 → §7 Embodied VLM → §5 VLN / §6 ObjectNav → §8 端到端判断。先有几何与定位，再谈语言语义。</p>
+<p>卷七按 §1 3D 感知 → §3 SLAM → §4 经典导航 → §7 Embodied VLM → §5 VLN / §6 ObjectNav → §8 端到端判断。先有几何与定位，再谈语言语义。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/07c_navigation_track.html">进入阶段 7C · 感知 / SLAM / 导航岗顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="阶段-8--coding-与系统设计收口">阶段 8 · Coding 与系统设计收口</h2>
-<p><a href="interviews/08_coding_systemdesign.html">卷八</a>不要按原频次硬刷，建议按数据结构成组：</p>
+<p>卷八不要按原频次硬刷，建议按数据结构成组：</p>
 <ol><li>数组 / 哈希 / 滑窗：Q11、Q01、Q03、Q14、Q17。</li><li>链表：Q02、Q13、Q27、Q07、Q20。</li><li>栈 / 队列 / BFS：Q16、Q18、Q10、Q12、Q22。</li><li>区间 / 堆 / 搜索：Q19、Q05、Q26、Q28。</li><li>动态规划：Q06、Q08、Q21、Q25、Q29、Q24、Q23。</li><li>最后用 Q31–Q40 检验能否把前面所有模块连成系统。</li></ol>
 <p><strong>通过标准</strong>：系统设计时先讲需求与指标，再画数据流和频率边界，最后讲模型、部署、监控、失败恢复与取舍。</p>
+<blockquote><p><strong>直达阅读</strong>：<a href="stages/08_coding_system_design.html">进入阶段 8 · Coding 与系统设计顺序题单 →</a></p></blockquote>
 <hr />
 <h2 id="28-天最小计划">28 天最小计划</h2>
 <table><thead><tr><th>周</th><th style="text-align:right">天数</th><th>内容</th><th>周末输出</th></tr></thead><tbody><tr><td>第 1 周</td><td style="text-align:right">1–2</td><td>阶段 0 前置地图</td><td>手画闭环，不看答案讲 3 分钟</td></tr><tr><td></td><td style="text-align:right">3–5</td><td>阶段 1 ML / Transformer</td><td>解释一次训练 step 和 Attention</td></tr><tr><td></td><td style="text-align:right">6–7</td><td>阶段 2 机器人学</td><td>画坐标变换到控制的链路</td></tr><tr><td>第 2 周</td><td style="text-align:right">8–12</td><td>阶段 3 RL</td><td>从 MDP 讲到 PPO / SAC</td></tr><tr><td></td><td style="text-align:right">13–14</td><td>第一轮回忆</td><td>只看题目，标出断点</td></tr><tr><td>第 3 周</td><td style="text-align:right">15–19</td><td>阶段 4 VLA / IL</td><td>拆解一个 VLA 的 7 个组件</td></tr><tr><td></td><td style="text-align:right">20–21</td><td>阶段 5 Sim2Real</td><td>对比四个相关概念</td></tr><tr><td>第 4 周</td><td style="text-align:right">22–24</td><td>阶段 6 工程</td><td>完成一次口头排障</td></tr><tr><td></td><td style="text-align:right">25–26</td><td>选择一条岗位支线</td><td>做 10 题专项复述</td></tr><tr><td></td><td style="text-align:right">27</td><td>Coding / 系统设计</td><td>画完整系统图</td></tr><tr><td></td><td style="text-align:right">28</td><td>模拟面试</td><td>30 分钟混合抽题 + 复盘</td></tr></tbody></table>
@@ -543,8 +571,8 @@ footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--
 <footer class="aris-footer">
   Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
   source path <code>docs\roadmap.md</code> ·
-  SHA256 <code>c7f5637236c8</code> ·
-  generated at 2026-08-16 15:12 UTC.
+  SHA256 <code>b3b2e04c3499</code> ·
+  generated at 2026-08-17 08:11 UTC.
   This is a generated view — edit the source Markdown, then re-render.
 </footer>
 </main>

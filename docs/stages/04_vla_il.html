@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阶段 4 · 模仿学习到 VLA</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="docs\stages\04_vla_il.md">
+<meta name="aris:source-sha256" content="3c502daef36c99948443b327017ec4b4e3967ccdec81577aeb35a1823ad6fc83">
+<meta name="aris:generated-at" content="2026-08-17 08:11 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+nav.toc a.back-home {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+nav.toc a.back-home:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+details.qa { margin: 8px 0; }
+details.qa:hover { border-color: var(--primary-soft); box-shadow: 0 1px 4px rgba(26,74,140,0.06); }
+details summary {
+  cursor: pointer;
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  list-style: none;
+  user-select: none;
+}
+details.qa summary { color: var(--ink); }
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+  color: var(--primary);
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details[open].qa { background: #fdfcf7; }
+details > :not(summary) { padding: 10px 16px; }
+details p:first-of-type { margin-top: 8px; }
+details p:last-of-type { margin-bottom: 10px; }
+
+.study-tools {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+  padding: 10px;
+  background: rgba(253,252,247,0.96);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: 0 2px 10px rgba(26,74,140,0.08);
+  backdrop-filter: blur(8px);
+}
+.study-tools[hidden] { display: none; }
+.study-tools input[type="search"] {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+.study-tools button, .master-btn {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink-soft);
+  padding: 6px 9px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.study-tools button:hover, .master-btn:hover { border-color: var(--primary); color: var(--primary); }
+.study-tools .progress-text { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+.master-btn {
+  float: right;
+  margin: -2px 0 0 10px;
+  padding: 3px 8px;
+}
+.master-btn.is-mastered { background: var(--good-bg); border-color: #6ee7b7; color: var(--good); }
+details.qa.is-mastered { border-left: 4px solid var(--good); }
+details.qa.is-filtered { display: none; }
+
+/* difficulty pills: L1 green / L2 yellow / L3 red */
+.lv {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.lv-l1 { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.lv-l2 { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.lv-l3 { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* frequency badge: 🔥×N */
+.freq {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-soft);
+  color: var(--ink-soft);
+  border: 1px solid var(--border-soft);
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.freq-hot { background: #fff1e6; color: #b8390e; border-color: #fcd9c0; }
+.seq {
+  display: inline-block;
+  min-width: 28px;
+  margin-right: 6px;
+  color: white;
+  background: var(--primary);
+  border-radius: 3px;
+  text-align: center;
+  font: 700 11px/1.7 "JetBrains Mono", monospace;
+}
+.origin {
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--ink-muted);
+  font: 600 10px/1.7 "JetBrains Mono", monospace;
+  letter-spacing: .03em;
+}
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+  .study-tools { top: 0; margin-left: -4px; margin-right: -4px; }
+  .study-tools input[type="search"] { flex-basis: 100%; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <a class="back-home" href="../roadmap.html">← 返回学习路线</a>
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#第-1-步--先理解模仿学习的基本矛盾">第 1 步 · 先理解模仿学习的基本矛盾</a>
+</li>
+<li><a href="#第-2-步--建立-vla-的组件视角">第 2 步 · 建立 VLA 的组件视角</a>
+</li>
+<li><a href="#第-3-步--理解动作分块与-act">第 3 步 · 理解动作分块与 ACT</a>
+</li>
+<li><a href="#第-4-步--理解生成式动作头">第 4 步 · 理解生成式动作头</a>
+</li>
+<li><a href="#第-5-步--最后阅读-vla-架构时间线">第 5 步 · 最后阅读 VLA 架构时间线</a>
+</li>
+<li><a href="#阶段结束时怎么复习">阶段结束时怎么复习</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<div class="eyebrow">ORDERED LEARNING · STAGE</div>
+
+
+
+<div class="study-tools" hidden aria-label="学习工具">
+  <input id="qa-search" type="search" placeholder="搜索本页题目或关键词…" aria-label="搜索本页题目">
+  <button id="toggle-unmastered" type="button">只看未掌握</button>
+  <button id="collapse-all" type="button">全部折叠</button>
+  <span class="progress-text" id="progress-text"></span>
+</div>
+
+<h1 id="阶段-4--模仿学习到-vla">阶段 4 · 模仿学习到 VLA</h1>
+<blockquote><p>从闭环分布偏移出发，逐层搭起视觉—语言—动作模型 本页由原八卷题库自动抽取完整问答，并严格按知识依赖排序。原卷仍是内容源。</p></blockquote>
+<p><strong>先修</strong>：完成机器学习、机器人控制和 RL 三个基础阶段。</p>
+<p><strong>本阶段共 21 题 · 通过标准</strong>：看到新 VLA 时，能主动拆解 backbone、视觉编码、融合、动作头、数据和控制接口。</p>
+<p><a href="03_rl_backbone.html">← 上一步</a> · <a href="../roadmap.html">返回总路线</a> · <a href="05_sim2real_world_models.html">下一步 →</a></p>
+<hr />
+<h2 id="第-1-步--先理解模仿学习的基本矛盾">第 1 步 · 先理解模仿学习的基本矛盾</h2>
+<blockquote><p>先知道行为克隆为什么简单、又为什么会在闭环中累积错误。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">01</span> <span class="origin">卷三</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×12</span> <b>Q01</b> · Behavior Cloning（BC）是什么？为什么会有 covariate shift？怎么缓解？</summary>
+<p><strong>答</strong>：BC 把专家轨迹 $(s, a^*)$ 当监督学习样本，学 $\pi_\theta(a \mid s)$ 最小化 $\|a - a^*\|^2$（连续动作）或交叉熵（离散）。</p>
+<p><strong>Covariate shift</strong>（协变量偏移）：策略一旦小偏离专家分布，落入未见状态 → 误差累积 → 长程任务复利崩塌，T 步误差按 $O(\epsilon T^2)$ 增长。</p>
+<p><strong>缓解</strong>：① <strong>DAgger</strong> — 迭代收集策略访问态 + 专家标注，几乎消除 shift；② 数据扩增（轨迹噪声/镜像/回放）；③ <strong>Action Chunking</strong> — 一次预测 K 步，把"复利"压成 $T/K$ 次；④ Diffusion Policy 多模态分布建模；⑤ 加 RL 微调（IL + RL）。</p>
+<p><strong>易错</strong>：BC 不是"数据多就行"——数据多但仍偏专家分布，shift 不会自动消失；需要让策略实际访问的状态分布也在数据里。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">02</span> <span class="origin">卷三</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×11</span> <b>Q02</b> · BC、DAgger、GAIL、IRL 的区别与适用场景？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>BC</strong>：监督学习直接学 $\pi(a\mid s)$；简单、需要大量演示，有 shift。<strong>场景</strong>：数据足、任务短。</li><li><strong>DAgger</strong>：BC + 主动学习，迭代让策略访问的新状态由专家标注；几乎消除 shift。<strong>场景</strong>：专家在线可查询（仿真 / 人在回路）。</li><li><strong>GAIL</strong>：生成对抗 IL，判别器区分"策略 vs 专家"轨迹，policy 通过 RL 最大化欺骗判别器；无需 reward。<strong>场景</strong>：复杂行为、reward 难写。</li><li><strong>IRL</strong>：反推 reward function $R(s,a)$，再 RL 求解；可解释、可泛化。<strong>场景</strong>：想理解专家"为什么这么做"。</li></ul>
+<p><strong>易错</strong>：DAgger 不是 BC 的"训练 trick"，是要持续访问专家；GAIL 训练不稳（GAN 通病），机器人上较少用。</p>
+</details>
+<hr />
+<h2 id="第-2-步--建立-vla-的组件视角">第 2 步 · 建立 VLA 的组件视角</h2>
+<blockquote><p>先分清 VLM 与 VLA，再认识数据、视觉编码器和多模态连接器。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">03</span> <span class="origin">卷三</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×5</span> <b>Q30</b> · VLM 和 VLA 的区别是什么？VLA 多了什么模块？token 化方案怎么变？</summary>
+<p><strong>答</strong>：</p>
+<table><thead><tr><th></th><th>VLM（Vision-Language Model）</th><th>VLA（Vision-Language-Action）</th></tr></thead><tbody><tr><td>输入</td><td>图像 + 文本</td><td>图像 + 文本指令 + 历史 proprio</td></tr><tr><td>输出</td><td>文本 token</td><td><strong>动作</strong>（连续 / 离散 token）</td></tr><tr><td>训练数据</td><td>web 图文</td><td>web + <strong>机器人轨迹</strong></td></tr><tr><td>多出模块</td><td>—</td><td><strong>Action head</strong>（离散 token 或 Flow Matching 头）</td></tr></tbody></table>
+<p><strong>Token 化方案</strong>：</p>
+<ul><li>VLM：仅 text token（如 32K vocab）。</li><li><p>VLA：text token + <strong>action token</strong>——</p>
+<ul><li>离散方案（RT-2 / OpenVLA）：每维动作 256 bin，复用 LLM 词表最不常用 256 token；一步 7 维 = 7 token。</li><li>连续方案（π0 / RDT）：action 不 token 化，直接由独立 Action Expert（Flow Matching / Diffusion）输出。</li><li>FAST：DCT + BPE 把 chunk 压成更少 token，介于两者之间。</li></ul></li></ul>
+<p><strong>易错</strong>：VLA 不是 "VLM 加个 head" 就完事——训练时要 co-finetune 机器人数据，否则 VLM 在动作分布上零样本不行。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">04</span> <span class="origin">卷三</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×8</span> <b>Q28</b> · 介绍一下 Open-X-Embodiment 数据集，它解决了什么问题？数据多样性对 VLA 泛化的影响？</summary>
+<p><strong>答</strong>：<strong>Open-X-Embodiment（OXE）</strong>：2023-10 Google 联合 21 个 lab 发布，约 <strong>60 个数据集 / 22 种 embodiment / 1M+ 轨迹</strong>（OpenVLA 训练用其中 curated <strong>~970K</strong> 子集）。是迄今最大的跨实验室、跨形态机器人数据集。</p>
+<p><strong>解决的问题</strong>：</p>
+<ol><li><strong>单 lab 数据量太小</strong>（&lt; 100K），scale 不起来。</li><li><strong>跨形态无数据</strong>：每 lab 用不同机器人，无法对比/合并。</li><li><strong>任务覆盖窄</strong>：单数据集多为 pick &amp; place，缺多样性。</li></ol>
+<p><strong>对 VLA 泛化的影响</strong>：</p>
+<ul><li>RT-X 论文实证：在 OXE 上联合训练比单数据集训练，跨场景成功率显著提升。</li><li>数据多样性（任务 / 场景 / embodiment）比数据量本身更关键。</li><li>OpenVLA / π0 都以 OXE 为预训练基础。</li></ul>
+<p><strong>易错</strong>：OXE ≠ 一个统一格式的数据集，是 ~60 个原始数据集 + RLDS 统一接口；动作空间标准化到 7 维末端 + gripper（不足补 0）。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">05</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×7</span> <b>Q29</b> · OpenVLA 的视觉编码器为什么用 SigLIP + DINOv2 双路融合？只用 CLIP 行不行？</summary>
+<p><strong>答</strong>：<strong>SigLIP</strong> 与 <strong>DINOv2</strong> 各有所长：</p>
+<ul><li><strong>SigLIP</strong>（image-text contrastive）：偏<strong>语义</strong>（"杯子" → 杯子图像），对自然语言强对齐。</li><li><strong>DINOv2</strong>（自监督）：偏<strong>空间几何</strong>（深度、表面纹理、空间结构），对场景结构敏感。</li></ul>
+<p><strong>双路融合</strong>：两个编码器各出 patch tokens，<strong>channel-wise concat</strong>（不是 cross-attention），喂给 LLM。</p>
+<p><strong>只用 SigLIP 不行</strong>：</p>
+<ol><li>SigLIP / CLIP 对<strong>空间几何弱</strong>——能识别"杯子"但不知"杯子距夹爪 5 cm 偏左"。</li><li>机器人操作高度依赖空间推理（抓取位姿、避障）。</li><li><strong>Prismatic VLM</strong> 论文实证：双路 &gt; SigLIP &gt; DINOv2 &gt; CLIP，在 robotics benchmark 上差距明显。</li></ol>
+<p><strong>易错</strong>：双路融合不是 ensemble，是同时给 LLM 输入两套 tokens；LLM 自己学如何用。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">06</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×4</span> <b>Q31</b> · 多模态对齐里 Q-Former、projection、cross-attention 这几种 connector 的区别？</summary>
+<p><strong>答</strong>：<strong>Connector</strong> = 把视觉特征对齐到 LLM 输入空间的模块。</p>
+<table><thead><tr><th>Connector</th><th>代表</th><th>机制</th><th>token 数</th></tr></thead><tbody><tr><td><strong>Projection</strong></td><td>LLaVA</td><td>MLP 直接映射 patch → token</td><td>= patch 数（多）</td></tr><tr><td><strong>Q-Former</strong></td><td>BLIP-2</td><td>可学 query 通过 cross-attn 提取关键视觉特征</td><td><strong>可压缩</strong>（少）</td></tr><tr><td><strong>Cross-Attention</strong></td><td>Flamingo</td><td>在 LLM 每层插 cross-attn 与视觉特征交互</td><td>不增 input token，但<strong>改 LLM 结构</strong></td></tr></tbody></table>
+<p><strong>VLA 实务</strong>：</p>
+<ul><li><strong>Projection（OpenVLA / Prismatic）</strong>：简单、稳；token 数多（256-576 / 图）但 LLM 能扛。</li><li><strong>Q-Former</strong>：复杂、训练不稳；VLA 上较少用。</li><li><strong>Cross-Attention</strong>：需改 LLM 架构；不便于直接用现成 VLM 权重。</li></ul>
+<p><strong>易错</strong>：Q-Former 不是"更先进"——LLaVA 系列证明 projection 简单 + 数据多反而更好。</p>
+</details>
+<hr />
+<h2 id="第-3-步--理解动作分块与-act">第 3 步 · 理解动作分块与 ACT</h2>
+<blockquote><p>从单步误差累积出发，理解为什么预测 action chunk，以及 ACT 如何实现。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">07</span> <span class="origin">卷三</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×10</span> <b>Q24</b> · 什么是 Action Chunking？为什么 VLA 要预测一个动作 chunk 而不是单步动作？块大小怎么选？</summary>
+<p><strong>答</strong>：<strong>Action Chunking</strong>：策略一次预测 K 步连续动作 $a_{t:t+K}$ 而非单步 $a_t$。</p>
+<p><strong>执行方式</strong>：</p>
+<ul><li><strong>Open-loop</strong>：执行整个 chunk 再重新规划。</li><li><strong>Receding-horizon</strong>：执行 1 步重规划，类似 MPC。</li><li><strong>Ensemble</strong>：多 chunk 重叠用 EMA / 投票（ACT 用法）。</li></ul>
+<p><strong>好处</strong>：</p>
+<ol><li><strong>减少高频推理开销</strong>：K 倍。</li><li><strong>平滑动作</strong>：相邻步内插值好，减少抖动。</li><li><strong>显式建模时序相关性</strong>：尤其 diffusion / flow 类策略受益。</li><li><strong>缓解复合误差</strong>：T 步任务的"高层决策点"从 T 降到 $T/K$，整体偏离专家分布的次数变少；但 chunk 内仍是 open-loop，不能严格消除 covariate shift。</li></ol>
+<p><strong>块大小</strong>：</p>
+<ul><li>ALOHA / 精细操作：K = 8-16（160-320 ms）。</li><li>π0：K = 50（50 Hz 下 1 秒，长程任务）。</li><li>任务变化慢可更长；环境多变需更短。</li></ul>
+<p><strong>易错</strong>：chunk 太长牺牲反应性（环境突变前已锁死动作）；4-16 在 manipulation 上是甜区。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">08</span> <span class="origin">卷三</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×7</span> <b>Q26</b> · 模仿学习里"复合误差"指什么？Action Chunking 是怎么缓解它的？理论解释是什么？</summary>
+<p><strong>答</strong>：<strong>复合误差</strong>（compounding error）：BC 在每步犯小错 $\epsilon$，T 步后误差累积为 $O(\epsilon T^2)$（在最坏情况下二次增长）；策略一旦偏离专家分布，错误像复利一样雪崩。</p>
+<p><strong>Action Chunking 缓解</strong>：一次决策 K 步，等价于把 T 步轨迹划成 $T/K$ 个"决策点"，<strong>chunk 内动作 joint 预测，不会因单步偏离累积</strong>；只在 chunk 之间的决策点处可能累积。</p>
+<p><strong>直觉</strong>：高层重规划次数从 $T$ 降到 $T/K$，复合误差量级随之缩小；但 chunk 内部仍是 open-loop，环境扰动或专家不一致仍会让单 chunk 内误差累积，因此并非"严格平方降阶"。</p>
+<p><strong>实证</strong>：ACT 论文中较大 chunk 在插针等高精度任务上显著优于单步；最佳 K 与任务变化率相关，过长牺牲反应性。</p>
+<p><strong>易错</strong>：chunking 不解决"OOD 状态"本身——只减少"高层决策点数量"；仍需 DAgger / 数据多样性来覆盖 OOD。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">09</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×8</span> <b>Q25</b> · ACT（Action Chunking with Transformers）的结构是什么？它用 VAE / CVAE 解决了什么问题？</summary>
+<p><strong>答</strong>：<strong>ACT 结构</strong>（ALOHA 团队 2023）：Encoder-Decoder Transformer + <strong>CVAE</strong>。</p>
+<ul><li><strong>Encoder</strong>：图像 + proprio + 文本指令 → 上下文特征。</li><li><strong>Decoder</strong>：自回归 / 一次性输出 K 步动作 chunk。</li><li><strong>CVAE</strong>：训练时额外 encoder 把 (动作 chunk, 观测) → latent $z$，KL 正则到 $\mathcal{N}(0, I)$；decoder 用 $(z, \text{观测})$ 还原 chunk。</li><li><strong>推理时不用 encoder</strong>：直接 $z = 0$（mean）→ decoder 出 chunk。</li></ul>
+<p><strong>CVAE 解决的问题</strong>：<strong>多模态动作分布</strong>。直接 MSE 回归 chunk 会把"专家 A 走左路 / 专家 B 走右路"平均成"中间路"（物理不可执行）。CVAE 让 $z$ 编码"走哪条路的意图"，推理 $z=0$ 输出<strong>某条代表性路径</strong>而非 mean。</p>
+<p><strong>易错</strong>：ACT 推理用 $z=0$ 不是"取所有路径平均"，而是"取 prior 的 mode"，仍是某条具体路径。</p>
+</details>
+<hr />
+<h2 id="第-4-步--理解生成式动作头">第 4 步 · 理解生成式动作头</h2>
+<blockquote><p>把多峰动作分布、Diffusion Policy、Flow Matching 和 π0 连起来。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">10</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×11</span> <b>Q18</b> · Diffusion Policy 怎么把动作建模成"去噪过程"？相比 BC 直接回归动作有什么优势？</summary>
+<p><strong>答</strong>：<strong>建模</strong>：把动作分布 $\pi(a \mid s)$ 用 score-based diffusion 建模。</p>
+<ul><li><strong>训练</strong>：在专家动作 $a^*$ 上加噪 $a_\tau = \sqrt{\bar\alpha_\tau} a^* + \sqrt{1-\bar\alpha_\tau}\,\varepsilon$，学噪声预测器 $\varepsilon_\theta(a_\tau, \tau, s)$。</li><li><strong>推理</strong>：从 $\varepsilon \sim \mathcal{N}(0, I)$ 起，反向 SDE/ODE 逐步 denoise 到 $a$（DDPM 50 步 / DDIM 10-20 步）。</li></ul>
+<p><strong>vs BC 优势</strong>：</p>
+<ol><li><strong>多模态分布</strong>：BC 回归会"平均"多专家路径输出"中间"不可执行动作；diffusion 显式建模多峰。</li><li><strong>chunk 一次生成</strong>：天然支持 K 步动作 chunk（去噪整段而非单步）。</li><li><strong>长尾任务更稳</strong>：噪声扰动训练相当于隐式数据增强。</li></ol>
+<p><strong>缺点</strong>：① <strong>推理慢</strong>（10-50 step），高频控制需并行/蒸馏；② 训练目标对噪声调度敏感。</p>
+<p><strong>易错</strong>：Diffusion Policy 不是"在 BC loss 上加噪声"，是完全不同的 score-based 框架。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">11</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×8</span> <b>Q20</b> · Diffusion 和 Flow Matching 有什么本质区别？为什么 Flow Matching 在机器人上越来越流行？</summary>
+<p><strong>答</strong>：<strong>本质区别</strong>：</p>
+<table><thead><tr><th></th><th>Diffusion</th><th>Flow Matching</th></tr></thead><tbody><tr><td>数学框架</td><td><strong>SDE</strong> 前向加噪 + 反向去噪</td><td><strong>ODE</strong> 沿运输路径走</td></tr><tr><td>学习目标</td><td>噪声 $\varepsilon$ 或 score $\nabla \log p_\tau$</td><td><strong>速度场</strong> $v_\theta$</td></tr><tr><td>路径定义</td><td>由 SDE 调度（cosine/linear）决定</td><td><strong>显式给出</strong> $x_\tau = \tau x_1 + (1-\tau) x_0$</td></tr><tr><td>推理</td><td>SDE 求解器（慢）</td><td>ODE 求解器（快）</td></tr></tbody></table>
+<p><strong>机器人流行原因</strong>：</p>
+<ol><li><strong>推理快</strong>：10 ODE step vs 50 SDE step，高频控制可行。</li><li><strong>训练稳</strong>：速度场数值范围紧凑，loss 不爆炸。</li><li><strong>超参少</strong>：无需选 cosine/linear 调度。</li><li><strong>理论统一</strong>：Diffusion 是 FM 的特例（特定路径下）。</li></ol>
+<p><strong>易错</strong>：FM 不是 Diffusion 的"加速版"，是更通用框架；Diffusion 可看作 FM 在特定路径上的实例。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">12</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×10</span> <b>Q19</b> · π0 为什么用 Flow Matching 而不是 Diffusion？50 Hz 控制频率背后的工程考量是什么？</summary>
+<p><strong>答</strong>：<strong>Flow Matching 优点</strong>：</p>
+<ol><li><strong>训练更稳</strong>：学速度场 $v_\theta$ 回归 $v^* = x_1 - x_0$，数值范围紧凑；diffusion 学 $\varepsilon$ 范围大、训练易抖。</li><li><strong>推理步数少</strong>：10 步 ODE 即可 vs DDPM 50 步；省去 cosine/linear schedule 超参。</li><li><strong>路径显式</strong>：$x_\tau = \tau x_1 + (1-\tau) x_0$，方差 $(1-\tau)^2 I$（不是 $(1-\tau) I$，常见笔误）。</li></ol>
+<p><strong>50 Hz 工程考量</strong>：控制频率 50 Hz（20 ms / step）由底层执行端按 chunk 消耗动作。H=50 = <strong>覆盖时长</strong> ≈1 秒；<strong>重规划频率</strong>由 execution horizon / temporal ensemble / 异步队列决定，不是固定 1 Hz。</p>
+<p><strong>易错</strong>：50 Hz = 控制频率，H=50 = 覆盖时长，两者不要混成"每秒重算一次 chunk"。</p>
+</details>
+<hr />
+<h2 id="第-5-步--最后阅读-vla-架构时间线">第 5 步 · 最后阅读 VLA 架构时间线</h2>
+<blockquote><p>现在再比较 RT、OpenVLA 与 π 系列，模型名会落到已经理解的组件上。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">13</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×15</span> <b>Q09</b> · OpenVLA 和 RT-2 在架构上的主要区别？OpenVLA 用 7B Llama-2 凭什么打过 55B 的 RT-2-X？</summary>
+<p><strong>答</strong>：</p>
+<table><thead><tr><th></th><th>OpenVLA</th><th>RT-2 / RT-2-X</th></tr></thead><tbody><tr><td>Backbone</td><td>Llama-2 <strong>7B</strong>（Prismatic 框架）</td><td>PaLI-X <strong>55B</strong> 或 PaLM-E <strong>12B</strong>（闭源）</td></tr><tr><td>视觉</td><td><strong>SigLIP + DINOv2 双路</strong></td><td>PaLI-X / PaLM-E 内置 ViT（含 ViT-22B 等）</td></tr><tr><td>动作头</td><td>每维 256 bin 离散化 → 复用 LLM 词表最不常用 256 token</td><td>同</td></tr><tr><td>训练数据</td><td>Open-X-Embodiment <strong>970K</strong> 轨迹</td><td>Google 内部 + Open-X</td></tr><tr><td>开源</td><td>✅ 全开源 + LoRA-friendly</td><td>❌ 闭源</td></tr></tbody></table>
+<p><strong>胜出原因</strong>：① <strong>DINOv2 补足空间几何</strong>——CLIP/SigLIP 偏语义弱几何，DINOv2 自监督预训练对空间结构更敏感；② Llama-2 web 文本 + 代码预训练更稳；③ 全开源使社区微调迭代更快。</p>
+<p><strong>易错</strong>：OpenVLA 不是"小胜大"玄学——是同等 fine-tune 量上的工程整合优势；零样本新任务上 RT-2-X 仍可能更强。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">14</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×9</span> <b>Q10</b> · RT-2 是怎么把动作编码成 token 的？为什么这种"动作即文本 token"方案有效但效率不高？</summary>
+<p><strong>答</strong>：<strong>方案</strong>：动作向量 <strong>7 维 = [Δx, Δy, Δz, Δroll, Δpitch, Δyaw, gripper]</strong>，每维正态化到 $[-1, 1]$，再离散化为 <strong>256 个 bin</strong>；取 LLM 词表里<strong>最不常用的 256 个 token</strong> 复用为"动作 token"。一步动作 = <strong>7 个 token</strong>，与文本 token 同混训。</p>
+<p><strong>有效</strong>：① 复用 LLM 的 token embedding + 自回归解码，直接利用 web 知识；② co-finetune 文本 + 机器人数据，VLM 的常识能迁移；③ scale up 自然。</p>
+<p><strong>低效</strong>：① <strong>7 token 串行 AR 解码</strong>，单步推理 = 7 forward；chunk K 步则 $7K$ forward；OpenVLA 6 Hz 慢的根源。② 动作复用 LLM token 不是"自然"的——精度不足、跨任务泛化弱。</p>
+<p><strong>改进</strong>：① OpenVLA-OFT 用<strong>并行解码</strong> + 连续动作头；② π0-FAST 用 DCT + BPE 把 chunk 压成更少 token。</p>
+<p><strong>易错</strong>：256 bin 不是"够细"，是 VLM 复用的权衡；高精度任务（&lt; 0.1 mm 插针）必失效。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">15</span> <span class="origin">卷三</span> <span class="lv lv-l3">L3</span> <span class="freq">🔥×8</span> <b>Q11</b> · π0 / π0.5 / π0.6 三个版本的核心差异？KI（Knowledge Insulation）解决了什么？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>π0</strong>（2024-10）：PaliGemma 3B（VLM）+ <strong>Action Expert 300M</strong>（独立 Flow Matching 动作头）+ 50 Hz 控制 + chunk <strong>H = 50</strong>。</li><li><strong>π0.5</strong>（2025）：核心是<strong>开放世界泛化 + 多源 co-training</strong>，让 π0 框架在更多任务/场景/embodiment 上稳定迁移；<strong>KI（Knowledge Insulation）是 π0.5 框架的后续扩展</strong>，隔离 VLM 与 Action Expert 梯度防止动作训练污染语言/视觉能力。</li><li>**π0.6 / π*0.6<strong>（2025-11）：核心创新 </strong>RECAP**——把示教数据当 offline RL 用，advantage-conditioned 采样，强化"好动作 token"权重。</li><li><strong>π0.7</strong>（2026-04）：最新发布。</li></ul>
+<p><strong>KI 解决什么</strong>：早期版本动作微调梯度反传会<strong>破坏 VLM 的语言/视觉理解</strong>（灾难性遗忘）；KI 用 stop-gradient + 双路梯度让两个模块各学各的。</p>
+<p><strong>易错</strong>：RECAP 属于 <strong>π0.6</strong>，不是 π0.5；π0.5 主体是"开放世界泛化"，KI 是配套扩展工作；π0.7 是 <strong>2026-04</strong> 发布。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">16</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×6</span> <b>Q12</b> · RDT-1B、Octo、GR00T-N1 都是 VLA，它们的动作头分别长什么样？哪种结构更"重"？</summary>
+<p><strong>答</strong>：</p>
+<table><thead><tr><th>模型</th><th>总参</th><th>动作头</th><th>"重量"</th></tr></thead><tbody><tr><td><strong>RDT-1B</strong>（2024-10）</td><td>1.2B</td><td>整个 1.2B Transformer 当 <strong>diffusion denoiser</strong></td><td><strong>最重</strong></td></tr><tr><td><strong>Octo</strong>（2024-05）</td><td>~93M</td><td>小 Transformer encoder + <strong>小 diffusion head（~10M）</strong></td><td><strong>最轻</strong></td></tr><tr><td><strong>GR00T-N1</strong>（2025）</td><td>2.2B</td><td>VLM 1.34B + <strong>Action Expert 0.86B</strong>（Flow Matching）</td><td>中重</td></tr></tbody></table>
+<p><strong>trade-off</strong>：</p>
+<ul><li>Head 太轻（Octo）→ 多模态动作分布建模能力受限，复杂任务难。</li><li>Head 太重（RDT）→ 表达力强但推理慢、训练贵。</li><li>GR00T-N1 中庸路线，借鉴 π0 的 backbone + expert 拆分思路。</li></ul>
+<p><strong>易错</strong>：RDT-1B 不是"另一个 OpenVLA"——它没用 LLM token 离散化，直接 backbone 当 denoiser；这是与 OpenVLA / RT-2 范式不同的"端到端 diffusion VLA"。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">17</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×6</span> <b>Q13</b> · FAST tokenizer 是怎么做的？为什么 DCT + BPE 组合比传统离散化高效 10×？</summary>
+<p><strong>答</strong>：<strong>FAST = DCT → scale → round → flatten → BPE</strong>，五步缺一不可。</p>
+<ol><li><strong>DCT</strong>（Discrete Cosine Transform）：把 H 步 × D 维动作 chunk 转频域，主要能量集中低频。</li><li><strong>Scale</strong>：把 DCT 系数缩放到合适整数范围（e.g. ±100）。</li><li><strong>Round</strong>：离散化为整数。</li><li><strong>Flatten</strong>：二维 (H × D) → 一维序列。</li><li><strong>BPE</strong>：用预训练 BPE tokenizer 把常见短模式压成单 token。</li></ol>
+<p><strong>高效 10× 原因</strong>：① DCT 集中能量，<strong>高频系数大多 ≈ 0</strong>，round 后变长串 0；② BPE 把这些重复模式压成 1-2 token；③ chunk 越长压缩比越高（H=50 时尤甚）。</p>
+<p><strong>效果</strong>：π0-FAST 在同样 chunk 下，token 数从 ~400 降到 ~40，推理速度 5-10× 提升。</p>
+<p><strong>易错</strong>：FAST 不是 "DCT 单独用"，BPE 是关键；少一步压缩比就不够。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">18</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×5</span> <b>Q14</b> · OpenVLA 的动作是怎么离散化的（每维 256 个 bin）？这种方案在多大动作精度任务上会失效？</summary>
+<p><strong>答</strong>：<strong>离散化方案</strong>：取每维动作（7 维（6-DoF 末端位姿 + 1 维 gripper））在训练集的 1%-99% 分位数区间，等分成 <strong>256 个 bin</strong>；超界截断。每个 bin 复用 LLM 词表里最不常用的 256 个 token。</p>
+<p><strong>失效场景</strong>：</p>
+<ol><li><strong>高精度任务</strong>（&lt; 0.1 mm 插针、拧螺丝）：256 bin 在 ±10 cm 量程下分辨率 ≈ 0.8 mm，精度不够。</li><li><strong>极端动作</strong>：超 99% 分位被截断，剧烈动作不能表达。</li><li><strong>多模态动作</strong>：256 bin 是单峰离散分布，难以表达"两条专家路径"这种多模态结构。</li></ol>
+<p><strong>改进</strong>：① <strong>OpenVLA-OFT</strong> 换成<strong>连续动作头 + L1 回归</strong>；② π0 用 <strong>Flow Matching</strong> 连续动作建模；③ FAST tokenizer 提高压缩比同时保精度。</p>
+<p><strong>易错</strong>：256 bin 不是 OpenVLA 独创，RT-2 也是；这是 VLM 复用方案的固有局限。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">19</span> <span class="origin">卷三</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×4</span> <b>Q15</b> · RT-1 → RT-2 → RT-X 的演进逻辑是什么？每一代的关键创新是什么？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>RT-1</strong>（2022）：EfficientNet + FiLM + Token Learner；<strong>130K 真机数据</strong>；首个 large-scale robot Transformer paradigm，但无 web 知识。</li><li><strong>RT-2</strong>（2023）：PaLI-X 55B / PaLM-E 12B + 动作 token + <strong>co-finetune（web + robot data）</strong>；<strong>首次把 web 知识灌入 robot policy</strong>。</li><li><strong>RT-X</strong>（2023-10）：RT-1 / RT-2 在 <strong>Open-X-Embodiment</strong>（~60 datasets / 22 embodiments / 1M+ trajectories）上跨形态训练（实验用 robotics mixture 子集），验证跨 embodiment 泛化。OpenVLA 后续用 OXE 中约 <strong>970K</strong> curated demos 微调。</li></ul>
+<p><strong>主线</strong>：RT-1 证 paradigm → RT-2 引 web 先验 → RT-X 验证联合训练。OpenVLA 是 RT-X 路线的开源版。</p>
+<p><strong>易错</strong>：RT-2 核心是 <strong>co-finetune</strong> 引入 web 数据，不是"放大版 RT-1"。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">20</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×4</span> <b>Q16</b> · π0 用的是哪个 VLM backbone？为什么选 PaliGemma 而不是 Llama？</summary>
+<p><strong>答</strong>：<strong>π0 backbone = PaliGemma</strong>（SigLIP-400M 视觉编码器 + <strong>Gemma-2B</strong> 语言模型）。</p>
+<p><strong>选择原因</strong>：</p>
+<ol><li><strong>已对齐的 VLM</strong>：PaliGemma 是 Google 联合预训练好的 vision-language 模型，比 "Llama + 外挂 ViT" 拼接更稳。</li><li><strong>Gemma-2B 够小</strong>：50 Hz 高频推理（20 ms / step）要求 backbone 轻量；Llama-2 7B 在消费级 GPU 上跑不到 50 Hz。</li><li><strong>Apache 2.0 协议</strong>：商用友好，机器人公司容易落地。</li><li><strong>Multimodal projector 现成</strong>：图像 → 文本 token 的投影层已训练好。</li></ol>
+<p><strong>不用 Llama</strong>：① text-only，需要再接视觉；② 7B 太重；③ Meta 协议有限制。</p>
+<p><strong>易错</strong>：<strong>PaliGemma ≠ Gemma</strong>——PaliGemma 含 SigLIP 视觉；说成 "π0 用 Llama" 是常见错（OpenVLA 才用 Llama-2 7B）。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">21</span> <span class="origin">卷三</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×4</span> <b>Q17</b> · π0 里 Action Expert 的 300M 参数为什么单独拆出来？和 backbone 怎么交互？</summary>
+<p><strong>答</strong>：<strong>π0 结构</strong>：PaliGemma 3B（VLM，frozen 或 LoRA） + <strong>Action Expert 300M</strong>（独立 Flow Matching 网络）。</p>
+<p><strong>拆出原因</strong>：</p>
+<ol><li><strong>负载分层</strong>：每次重算 chunk，VLM forward 一次产条件特征；Action Expert 走约 10 步 flow ODE。重算频率由 execution horizon / async 决定（不是固定 1 Hz）。</li><li><strong>训练目标不同</strong>：VLM 是 AR 语义损失，Action Expert 是 Flow Matching 速度场回归；放一起训会互相干扰。</li><li><strong>隔离梯度</strong>（KI 思想）：动作微调不应破坏 VLM 的语言/视觉理解。</li></ol>
+<p><strong>交互</strong>：VLM 编码 → 条件特征 $c$ → Action Expert 接 $(c, \text{noisy chunk}, \tau)$ → 约 10 步 ODE 出干净 chunk。chunk H=50 在 50 Hz 下覆盖 ~1 秒。</p>
+<p><strong>易错</strong>：Action Expert 是 joint training（不是独立）；H=50 = <strong>覆盖时长</strong>，不等于"每秒重算一次"。</p>
+</details>
+<hr />
+<h2 id="阶段结束时怎么复习">阶段结束时怎么复习</h2>
+<ol><li>点击“全部折叠”，只看题目口述答案。</li><li>能说出答案后标记“已掌握”；不要因为“看懂了”就标记。</li><li>第二天使用“只看未掌握”，第 7 天再完整复述一次。</li><li>回到<a href="../roadmap.html">总学习路线</a>，检查通过标准后再进入下一阶段。</li></ol>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>docs\stages\04_vla_il.md</code> ·
+  SHA256 <code>3c502daef36c</code> ·
+  generated at 2026-08-17 08:11 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+<script>
+(function () {
+  const cards = Array.from(document.querySelectorAll('details.qa'));
+  const tools = document.querySelector('.study-tools');
+  if (!cards.length || !tools) return;
+  tools.hidden = false;
+
+  const storageKey = 'q2a-mastered-v1';
+  let mastered = new Set();
+  try { mastered = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]')); } catch (_) {}
+  const pathKey = location.pathname.replace(/\/$/, '') || '/';
+  const search = document.getElementById('qa-search');
+  const toggle = document.getElementById('toggle-unmastered');
+  const progress = document.getElementById('progress-text');
+  let onlyUnmastered = false;
+
+  function idFor(card, index) {
+    const summary = card.querySelector('summary').cloneNode(true);
+    const button = summary.querySelector('.master-btn');
+    if (button) button.remove();
+    return pathKey + '::' + index + '::' + summary.textContent.trim();
+  }
+  function save() {
+    try { localStorage.setItem(storageKey, JSON.stringify(Array.from(mastered))); } catch (_) {}
+  }
+  function refresh() {
+    const query = search.value.trim().toLowerCase();
+    let done = 0;
+    cards.forEach((card, index) => {
+      const id = idFor(card, index);
+      const isDone = mastered.has(id);
+      if (isDone) done += 1;
+      card.classList.toggle('is-mastered', isDone);
+      const matches = !query || card.textContent.toLowerCase().includes(query);
+      card.classList.toggle('is-filtered', !matches || (onlyUnmastered && isDone));
+      const button = card.querySelector('.master-btn');
+      if (button) {
+        button.classList.toggle('is-mastered', isDone);
+        button.textContent = isDone ? '✓ 已掌握' : '标记掌握';
+        button.setAttribute('aria-pressed', String(isDone));
+      }
+    });
+    progress.textContent = '本页 ' + done + ' / ' + cards.length + ' 已掌握';
+    toggle.textContent = onlyUnmastered ? '显示全部' : '只看未掌握';
+  }
+
+  cards.forEach((card, index) => {
+    const summary = card.querySelector('summary');
+    if (!summary) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'master-btn';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const id = idFor(card, index);
+      mastered.has(id) ? mastered.delete(id) : mastered.add(id);
+      save();
+      refresh();
+    });
+    summary.appendChild(button);
+  });
+  search.addEventListener('input', refresh);
+  toggle.addEventListener('click', function () { onlyUnmastered = !onlyUnmastered; refresh(); });
+  document.getElementById('collapse-all').addEventListener('click', function () {
+    cards.forEach(card => { card.open = false; });
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>

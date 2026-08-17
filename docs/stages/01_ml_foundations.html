@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阶段 1 · 机器学习共同语言</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="docs\stages\01_ml_foundations.md">
+<meta name="aris:source-sha256" content="3541b73073d5139890a596641629e357752cf155d3c9b89687e198366a480a56">
+<meta name="aris:generated-at" content="2026-08-17 08:11 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+nav.toc a.back-home {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+nav.toc a.back-home:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+details.qa { margin: 8px 0; }
+details.qa:hover { border-color: var(--primary-soft); box-shadow: 0 1px 4px rgba(26,74,140,0.06); }
+details summary {
+  cursor: pointer;
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  list-style: none;
+  user-select: none;
+}
+details.qa summary { color: var(--ink); }
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+  color: var(--primary);
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details[open].qa { background: #fdfcf7; }
+details > :not(summary) { padding: 10px 16px; }
+details p:first-of-type { margin-top: 8px; }
+details p:last-of-type { margin-bottom: 10px; }
+
+.study-tools {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+  padding: 10px;
+  background: rgba(253,252,247,0.96);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: 0 2px 10px rgba(26,74,140,0.08);
+  backdrop-filter: blur(8px);
+}
+.study-tools[hidden] { display: none; }
+.study-tools input[type="search"] {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+.study-tools button, .master-btn {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink-soft);
+  padding: 6px 9px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.study-tools button:hover, .master-btn:hover { border-color: var(--primary); color: var(--primary); }
+.study-tools .progress-text { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+.master-btn {
+  float: right;
+  margin: -2px 0 0 10px;
+  padding: 3px 8px;
+}
+.master-btn.is-mastered { background: var(--good-bg); border-color: #6ee7b7; color: var(--good); }
+details.qa.is-mastered { border-left: 4px solid var(--good); }
+details.qa.is-filtered { display: none; }
+
+/* difficulty pills: L1 green / L2 yellow / L3 red */
+.lv {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.lv-l1 { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.lv-l2 { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.lv-l3 { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* frequency badge: 🔥×N */
+.freq {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-soft);
+  color: var(--ink-soft);
+  border: 1px solid var(--border-soft);
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.freq-hot { background: #fff1e6; color: #b8390e; border-color: #fcd9c0; }
+.seq {
+  display: inline-block;
+  min-width: 28px;
+  margin-right: 6px;
+  color: white;
+  background: var(--primary);
+  border-radius: 3px;
+  text-align: center;
+  font: 700 11px/1.7 "JetBrains Mono", monospace;
+}
+.origin {
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--ink-muted);
+  font: 600 10px/1.7 "JetBrains Mono", monospace;
+  letter-spacing: .03em;
+}
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+  .study-tools { top: 0; margin-left: -4px; margin-right: -4px; }
+  .study-tools input[type="search"] { flex-basis: 100%; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <a class="back-home" href="../roadmap.html">← 返回学习路线</a>
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#第-1-步--先理解训练为什么有效或失效">第 1 步 · 先理解训练为什么有效或失效</a>
+</li>
+<li><a href="#第-2-步--再理解深层网络如何稳定训练">第 2 步 · 再理解深层网络如何稳定训练</a>
+</li>
+<li><a href="#第-3-步--最后进入-transformer-与视觉-token">第 3 步 · 最后进入 Transformer 与视觉 token</a>
+</li>
+<li><a href="#第-4-步--最小手撕练习">第 4 步 · 最小手撕练习</a>
+</li>
+<li><a href="#阶段结束时怎么复习">阶段结束时怎么复习</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<div class="eyebrow">ORDERED LEARNING · STAGE</div>
+
+
+
+<div class="study-tools" hidden aria-label="学习工具">
+  <input id="qa-search" type="search" placeholder="搜索本页题目或关键词…" aria-label="搜索本页题目">
+  <button id="toggle-unmastered" type="button">只看未掌握</button>
+  <button id="collapse-all" type="button">全部折叠</button>
+  <span class="progress-text" id="progress-text"></span>
+</div>
+
+<h1 id="阶段-1--机器学习共同语言">阶段 1 · 机器学习共同语言</h1>
+<blockquote><p>从训练闭环走到 Transformer，不再孤立背名词 本页由原八卷题库自动抽取完整问答，并严格按知识依赖排序。原卷仍是内容源。</p></blockquote>
+<p><strong>先修</strong>：完成阶段 0，能解释张量、输入 / 输出和一次训练 step。</p>
+<p><strong>本阶段共 16 题 · 通过标准</strong>：能用“数据—模型—损失—更新—评测”解释分类、行为克隆和动作预测。</p>
+<p><a href="../learning/00_prerequisites.html">← 上一步</a> · <a href="../roadmap.html">返回总路线</a> · <a href="02_robotics_control.html">下一步 →</a></p>
+<hr />
+<h2 id="第-1-步--先理解训练为什么有效或失效">第 1 步 · 先理解训练为什么有效或失效</h2>
+<blockquote><p>从梯度、损失和数据划分建立训练闭环。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">01</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×15</span> <b>Q02</b> · 梯度消失和梯度爆炸的原因是什么？各有哪些解决方法？</summary>
+<p><strong>答</strong>：</p>
+<p><strong>消失</strong>：链式法则反传时，若激活函数（如 sigmoid）导数 &lt; 1，多层连乘后梯度指数衰减 → 浅层几乎不更新。</p>
+<p><strong>爆炸</strong>：权重矩阵乘积特征值 &gt; 1，梯度指数增长 → 更新步过大、训练发散。</p>
+<p><strong>解决梯度消失</strong>：① <strong>换激活函数</strong>：ReLU/Leaky ReLU 导数在正区间为 1；② <strong>残差连接</strong>（skip connection）提供梯度高速公路；③ <strong>BatchNorm/LayerNorm</strong> 归一化激活分布；④ <strong>LSTM 门机制</strong>（序列模型）。</p>
+<p><strong>解决梯度爆炸</strong>：① <strong>梯度裁剪</strong>（Gradient Clipping）：若 $\|g\| &gt; \tau$ 则 $g \leftarrow g \cdot \tau / \|g\|$；② <strong>权重初始化</strong>（Xavier/He）；③ <strong>BatchNorm</strong>。</p>
+<p><strong>易错</strong>：ReLU 有 dying ReLU 问题（负值区梯度永久为 0），大批量 + 大学习率下死亡神经元显著，Leaky ReLU / ELU 可缓解。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">02</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×10</span> <b>Q07</b> · 交叉熵损失和 MSE 损失分别适合什么场景？用错了会怎样？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>交叉熵（CE）</strong>：$L = -\sum_c y_c \log \hat{p}_c$；适合<strong>分类</strong>任务，与 softmax/sigmoid 配合，梯度形式简洁（$\hat{p}-y$），不会在输出层饱和时梯度消失。</li><li><strong>MSE</strong>：$L = \|y - \hat{y}\|^2$；适合<strong>回归</strong>任务（预测连续值，如关节角度、末端坐标）；与 sigmoid 配合时，当 $\hat{y}$ 饱和（近 0/1）梯度会消失。</li></ul>
+<p><strong>用错后果</strong>：</p>
+<ul><li>分类用 MSE：梯度消失严重（sigmoid 饱和区），收敛慢，概率解释也不对；</li><li>回归用 CE：值域不匹配，CE 假设输出是概率，连续回归输出 &gt; 1 时 log 无意义。</li></ul>
+<p><strong>延伸</strong>：机器人连续动作回归常用 <strong>Huber Loss</strong>（MSE 和 MAE 的拼接），对异常值（outlier）更鲁棒。</p>
+<p><strong>易错</strong>：CE 中 $\log 0$ 需要 clip，PyTorch 的 <code>CrossEntropyLoss</code> 内部已处理，不用手动加 $\epsilon$。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">03</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×5</span> <b>Q19</b> · 训练集/验证集/测试集的划分原则是什么？数据泄露是什么？</summary>
+<p><strong>答</strong>：<strong>划分原则</strong>：</p>
+<ul><li>训练集：用于学习参数</li><li>验证集（dev set）：用于超参调整（不能反复用来"选"模型后再报它的指标）</li><li>测试集：最终一次性评估，<strong>严禁在调参中使用</strong></li></ul>
+<p><strong>常见比例</strong>：数据充足时 60/20/20；数据少时用 k-fold（k=5/10）让每条数据都当过验证。</p>
+<p><strong>数据泄露（Data Leakage）</strong>：测试/验证集的信息提前"流入"训练，导致指标虚高。常见形式：① 归一化用全量（含测试集）的均值/方差；② 时序数据随机打乱（未来信息混入历史）；③ 图像增强用了测试集样本。</p>
+<p><strong>机器人场景</strong>：演示数据来自同一任务实例时，必须按<strong>任务/场景</strong>划分而非随机划帧（同场景的帧高度相关，随机划分严重高估泛化）。</p>
+<p><strong>易错</strong>：sklearn 的 StandardScaler 必须在训练集 <code>.fit()</code>，测试集只 <code>.transform()</code>，用 <code>.fit_transform()</code> 对全量是数据泄露。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">04</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×12</span> <b>Q04</b> · Adam 优化器原理是什么？和 SGD、AdamW 的区别？</summary>
+<p><strong>答</strong>：<strong>Adam</strong> = 一阶矩（梯度 EMA）+ 二阶矩（梯度平方 EMA），各参数有独立自适应学习率；更新：$\theta \leftarrow \theta - \alpha \hat{m}/(\sqrt{\hat{v}}+\epsilon)$（偏差修正后），$\beta_1=0.9, \beta_2=0.999$。</p>
+<p><strong>vs SGD</strong>：SGD 用统一学习率，收敛稳但慢；Adam 自适应、前期快，但大规模视觉任务泛化有时弱于 SGD+momentum。</p>
+<p><strong>vs AdamW</strong>：Adam 加 L2 正则后 weight decay 强度被 $\hat{v}$ 缩放（不均匀）；AdamW 把 weight decay 直接加在权重更新上（解耦），效果一致且可控——VLA 微调几乎都用 AdamW。</p>
+<p><strong>易错</strong>：Adam + L2 ≠ AdamW，两者在自适应学习率下行为不同；LLM/VLA 微调必须用 AdamW，否则 weight decay 强度因参数而异。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">05</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×9</span> <b>Q10</b> · 学习率调度（LR Schedule）有哪些常用策略？Warmup 为什么重要？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>Cosine Annealing</strong>：LR 按余弦从 $\eta_{max}$ 降到 $\eta_{min}$，后期细粒度收敛；最常见。</li><li><strong>Step Decay</strong>：每 N epoch 乘以 decay 因子（如 0.1）；简单但台阶式，可能跳过最优。</li><li><strong>Linear Decay</strong>：线性下降；简单，GPT 类常用。</li><li><strong>Warmup + Cosine</strong>（主流组合）：先从 0 线性升到 $\eta_{max}$（Warmup），再 cosine 衰减。</li></ul>
+<p><strong>Warmup 为什么重要</strong>：训练初期权重随机，梯度方向不稳；大学习率直接更新会破坏预训练权重（fine-tune 场景）或让 Adam 的二阶矩估计（$v_t$）在统计不稳时误导更新方向。Warmup 让模型先"摸清地形"再大步更新。</p>
+<p><strong>易错</strong>：Warmup 步数一般是总 steps 的 1-5%；太长 warmup 浪费训练；微调大模型（如 VLA）几乎必须用 warmup，否则容易灾难性遗忘。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">06</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×8</span> <b>Q12</b> · 权重初始化为什么重要？Xavier 和 He 初始化各适合什么激活函数？</summary>
+<p><strong>答</strong>：<strong>为什么重要</strong>：全 0 初始化 → 所有神经元梯度相同（对称性破坏失败）；过大初始值 → 激活饱和+梯度消失；过小 → 梯度消失+信号衰减。好的初始化让各层激活和梯度的方差在正向/反向传播中保持稳定。</p>
+<p><strong>Xavier（Glorot）初始化</strong>：$\text{Var}(W) = \frac{2}{n_{in} + n_{out}}$；假设激活函数<strong>线性（near zero）</strong>，适合 <strong>tanh / sigmoid</strong>（在零点近似线性）。</p>
+<p><strong>He（Kaiming）初始化</strong>：$\text{Var}(W) = \frac{2}{n_{in}}$；考虑 ReLU 把一半神经元置 0，方差要加倍补偿，适合 <strong>ReLU / Leaky ReLU</strong>。</p>
+<p><strong>易错</strong>：PyTorch 默认初始化对大多数层已用 Kaiming Uniform，但自定义层/Embedding 等要手动检查；使用 SELU 激活时有专门的 LeCun 初始化。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">07</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×8</span> <b>Q13</b> · 什么是 L1 正则和 L2 正则？它们对权重的影响有何不同？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>L2 正则</strong>（权重衰减）：$L_{total} = L + \lambda \|w\|_2^2$；梯度 $\partial/\partial w = \partial L/\partial w + 2\lambda w$，效果是每次更新时权重<strong>等比例收缩</strong>（权重趋于小而稠密）。</li><li><strong>L1 正则</strong>：$L_{total} = L + \lambda \|w\|_1$；梯度为 $\pm\lambda$（恒定），将小权重推为精确 <strong>0</strong>（稀疏权重），等效特征选择。</li></ul>
+<p><strong>实践差异</strong>：L2 在深度学习中更常用（weight decay）；L1 在稀疏特征选择（如 Lasso 回归）中有用；Elastic Net = L1 + L2 组合。</p>
+<p><strong>机器人策略网络</strong>：通常用 L2/weight decay + Dropout，L1 导致的权重稀疏不利于连续动作的平滑输出。</p>
+<p><strong>易错</strong>：Adam 下直接加 L2 不等于 weight decay（二阶矩缩放了梯度），要用 AdamW 才是真正解耦的 weight decay。</p>
+</details>
+<hr />
+<h2 id="第-2-步--再理解深层网络如何稳定训练">第 2 步 · 再理解深层网络如何稳定训练</h2>
+<blockquote><p>残差、归一化和 Dropout 分别处理不同问题。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">08</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×11</span> <b>Q06</b> · ResNet 的残差连接解决了什么问题？为什么不是直接加深网络？</summary>
+<p><strong>答</strong>：<strong>问题背景</strong>：直接堆叠深层网络（如 56 层）训练误差反而高于浅层（20 层）——不是过拟合，是<strong>网络退化</strong>（degradation）：优化器难以找到恒等映射。</p>
+<p><strong>残差连接</strong>：$H(x) = F(x) + x$，让网络学习残差 $F(x) = H(x) - x$ 而非直接学 $H(x)$。当最优映射接近恒等时，$F(x) \approx 0$ 比让所有层学恒等映射容易得多。</p>
+<p><strong>附加好处</strong>：① Skip connection 为梯度提供直通路径（等效更短的梯度路径），缓解梯度消失；② 实现了深度 scalable（ResNet-50/101/152 都可用）；③ 残差块输出方差较稳定，训练更容易。</p>
+<p><strong>易错</strong>：残差连接不是"自动防止过拟合"，过拟合靠 Dropout/L2/数据增强；残差解决的是<strong>优化难度</strong>（欠拟合+退化），不是泛化。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">09</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×14</span> <b>Q03</b> · BatchNorm 和 LayerNorm 的区别？Transformer 为什么用 LayerNorm？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>BatchNorm（BN）</strong>：沿 batch 维归一化，即对所有样本的同一特征位置计算均值/方差；训练时用 batch 统计量，推理时用 running 均值/方差（全局估计）。<strong>适合 CV/CNN</strong>，batch 大时稳定。</li><li><strong>LayerNorm（LN）</strong>：沿特征维（同一样本内所有通道）归一化，每个样本独立计算，<strong>不依赖 batch size</strong>，训练/推理行为一致。</li></ul>
+<p><strong>Transformer 用 LN 的原因</strong>：① 序列长度不等，batch 统计不稳定；② NLP 任务 batch 小时 BN 方差估计噪声大；③ 推理时单条序列（batch=1）BN 退化，LN 完全不受影响。</p>
+<p><strong>易错</strong>：BN 在推理期用的是训练期积累的 running mean/var，不是当前 batch 统计量；小 batch 时 BN 抖动大、LN 更稳。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">10</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×12</span> <b>Q05</b> · Dropout 的原理是什么？训练和推理阶段有何不同？</summary>
+<p><strong>答</strong>：<strong>训练时</strong>：每个神经元以概率 $p$ 被随机置 0（"丢弃"），保留的神经元输出乘以 $1/(1-p)$ 缩放（Inverted Dropout），使期望与完整网络一致。</p>
+<p><strong>推理时</strong>：所有神经元保留，<strong>不做 Dropout</strong>，直接用完整网络输出。（如果训练时没用 Inverted Dropout，推理时需将输出乘以 $(1-p)$。）</p>
+<p><strong>作用</strong>：① 减少神经元共适应（co-adaptation），相当于隐式集成多个子网络；② 正则化，防止过拟合。</p>
+<p><strong>易错</strong>：model.eval() 会自动关 Dropout；忘调会导致推理时随机性——<strong>这是 PyTorch 面试高频陷阱</strong>。BatchNorm 在 eval() 也切换到 running stats，两者必须同时切换。</p>
+</details>
+<hr />
+<h2 id="第-3-步--最后进入-transformer-与视觉-token">第 3 步 · 最后进入 Transformer 与视觉 token</h2>
+<blockquote><p>先有优化直觉，再理解 Attention、位置、Softmax 和 ViT。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">11</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×18</span> <b>Q01</b> · Transformer Self-Attention 的计算流程是什么？复杂度是多少？</summary>
+<p><strong>答</strong>：输入序列 $X \in \mathbb{R}^{n \times d}$ 分别乘三个权重矩阵得到 $Q, K, V$，然后计算：</p>
+<p>$$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V$$</p>
+<p>步骤：① 线性投影得 $Q, K, V$；② 计算相似度矩阵 $QK^\top$（$n \times n$）并除以 $\sqrt{d_k}$ 缩放；③ softmax 归一化；④ 加权求和 $V$。</p>
+<p><strong>复杂度</strong>：时间 $O(n^2 d)$，空间 $O(n^2)$（注意力矩阵是瓶颈），序列长时计算量爆炸。多头注意力是 $h$ 个小头并行，总参数量不变。</p>
+<p><strong>易错</strong>：除以 $\sqrt{d_k}$ 不是"随便加的"——防止点积过大导致 softmax 梯度消失；去掉 scale 训练会明显变差。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">12</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×10</span> <b>Q08</b> · Transformer 的位置编码（Positional Encoding）为什么必要？常见方案有哪些？</summary>
+<p><strong>答</strong>：Self-Attention 的计算对序列顺序<strong>天然无感</strong>（permutation equivariant）——打乱 token 顺序，attention 输出值相同（只是对应位置互换）。对于语言/时序，顺序信息极关键，必须额外注入。</p>
+<p><strong>方案对比</strong>：</p>
+<table><thead><tr><th>方案</th><th>原理</th><th>优缺点</th></tr></thead><tbody><tr><td>正弦位置编码（原始 Transformer）</td><td>固定公式 $\sin/\cos$</td><td>无需训练，可外推到更长序列；但绝对位置，相对位置弱</td></tr><tr><td>可学习位置嵌入（BERT/GPT）</td><td>每个位置有可训练向量</td><td>简单有效，不可外推（超训练长度退化）</td></tr><tr><td>RoPE（LLaMA / VLA）</td><td>旋转矩阵编码<strong>相对</strong>位置</td><td>天然外推、相对位置敏感，目前 LLM 主流</td></tr><tr><td>ALiBi</td><td>在 attention score 上加线性偏置</td><td>极简、外推好，速度快</td></tr></tbody></table>
+<p><strong>易错</strong>：原始 Transformer 和 BERT 的位置编码方案不同；RoPE 不是加在 embedding 上，而是在 Q/K 乘以旋转矩阵。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">13</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×7</span> <b>Q14</b> · 为什么 Softmax 输出可以当作概率？数值稳定性如何保证？</summary>
+<p><strong>答</strong>：<strong>概率解释</strong>：Softmax 把实值 logit 向量 $z$ 映射到 $(0,1)$ 且和为 1：</p>
+<p>$$\hat{p}_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$$</p>
+<p>连接到最大熵原理：当约束为期望值已知时，Softmax 是最大熵分布；结合交叉熵损失等价于最大化对数似然（MLE），有良好的概率理论支撑。</p>
+<p><strong>数值稳定</strong>：直接计算 $e^{z_i}$ 会在 $z_i$ 很大时溢出 → 实践中用 <strong>Stable Softmax</strong>：先减最大值 $c = \max_j z_j$，即 $\hat{p}_i = e^{z_i - c} / \sum_j e^{z_j - c}$，数学等价但数值无溢出。</p>
+<p><strong>易错</strong>：PyTorch 的 <code>F.cross_entropy</code> 内部等价于 LogSoftmax + NLLLoss（数值稳定）。<strong>不要</strong>先手动 softmax 再喂给 NLLLoss——NLLLoss 直接把输入当 log-prob 取负求均值，若输入是概率（非 log 域），loss 和梯度都会错误。正确做法：直接 <code>F.cross_entropy(logits, labels)</code>，不需要手动 softmax。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">14</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×5</span> <b>Q18</b> · ViT（Vision Transformer）与 CNN 的本质区别是什么？在机器人视觉中各有什么优劣？</summary>
+<p><strong>答</strong>：</p>
+<table><thead><tr><th></th><th>ViT</th><th>CNN</th></tr></thead><tbody><tr><td>感受野</td><td>全局（每层 token 互相 attend）</td><td>局部（逐层扩大）</td></tr><tr><td>归纳偏置</td><td>弱（无平移等变性假设）</td><td>强（平移等变、局部性）</td></tr><tr><td>参数效率</td><td>数据少时差（需大量数据弥补归纳偏置缺失）</td><td>数据少时好</td></tr><tr><td>可扩展性</td><td>强（patch 数量可变、序列建模自然）</td><td>弱（固定感受野，改分辨率麻烦）</td></tr></tbody></table>
+<p><strong>机器人视觉</strong>：</p>
+<ul><li><strong>ViT 优势</strong>：抓全局空间关系（末端 vs 目标位置远处相关），适合 VLA（视觉 + 语言 + 动作联合建模）；SigLIP / DINOv2 预训练的 ViT 在 OpenVLA 表现超越 CLIP-only；</li><li><strong>CNN 优势</strong>：小数据集（真机 50 demos）、实时推理（低延迟）；局部纹理/接触检测（细粒度操作）。</li><li>实务：VLA 主流用 ViT 作视觉 backbone + Transformer LM；实时控制头（非语言部分）可用小 CNN。</li></ul>
+<p><strong>易错</strong>：DINOv2 虽是 ViT，但自监督预训练让它比监督 ViT 更有空间几何感；不要混淆预训练方式和架构选择。</p>
+</details>
+<hr />
+<h2 id="第-4-步--最小手撕练习">第 4 步 · 最小手撕练习</h2>
+<blockquote><p>只实现最能检验理解的 LayerNorm 与 scaled dot-product attention。</p></blockquote>
+<details class="qa qa-handcoding">
+<summary><span class="seq">15</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×10</span> <b>✍ H04</b> · 手撕 LayerNorm</summary>
+<p><strong>考察点</strong>：沿最后特征维 norm；γ/β 形状等于 <code>normalized_shape</code>；LN 不依赖 batch，batch=1 也稳（vs BN）。</p>
+<p><strong>实现</strong>：</p>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+
+class LayerNorm(nn.Module):
+    def __init__(self, d, eps=1e-5):
+        super().__init__()
+        self.gamma = nn.Parameter(torch.ones(d))
+        self.beta = nn.Parameter(torch.zeros(d))
+        self.eps = eps
+
+    def forward(self, x):  # x: [..., d]
+        mean = x.mean(-1, keepdim=True)
+        # 用有偏方差 (unbiased=False)，与 PyTorch nn.LayerNorm 一致
+        var = x.var(-1, keepdim=True, unbiased=False)
+        return (x - mean) / torch.sqrt(var + self.eps) * self.gamma + self.beta</code></pre>
+<p><strong>易错</strong>：var 写成 std；忘 <code>eps</code> 导致除零；用 <code>unbiased=True</code>（默认）与官方实现差异；与 BN 的归一化维度记混。</p>
+</details>
+<details class="qa qa-handcoding">
+<summary><span class="seq">16</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×15</span> <b>✍ H01</b> · 手撕 scaled dot-product attention</summary>
+<p><strong>考察点</strong>：<code>Attention(Q,K,V) = softmax(QK^T/√d_k) V</code> 公式；为何要除 √d_k（防 softmax 饱和、梯度消失）。</p>
+<p><strong>实现</strong>：</p>
+<pre><code class="language-python">import math
+import torch
+import torch.nn.functional as F
+
+def sdpa(q, k, v, mask=None):
+    # q,k,v: [B, ..., L, d_k]；mask: True 处屏蔽
+    d_k = q.size(-1)
+    scores = q @ k.transpose(-2, -1) / math.sqrt(d_k)  # 缩放避免 softmax 饱和
+    if mask is not None:
+        scores = scores.masked_fill(mask, float(&#x27;-inf&#x27;))  # 加性 -inf 而非乘 0
+    attn = F.softmax(scores, dim=-1)
+    return attn @ v  # [B, ..., L, d_v]</code></pre>
+<p><strong>易错</strong>：忘 transpose；scale 用 <code>d_k</code> 而非 <code>√d_k</code>；mask 用乘性 0/1（softmax 后非 0 项不为 0）。</p>
+</details>
+<hr />
+<h2 id="阶段结束时怎么复习">阶段结束时怎么复习</h2>
+<ol><li>点击“全部折叠”，只看题目口述答案。</li><li>能说出答案后标记“已掌握”；不要因为“看懂了”就标记。</li><li>第二天使用“只看未掌握”，第 7 天再完整复述一次。</li><li>回到<a href="../roadmap.html">总学习路线</a>，检查通过标准后再进入下一阶段。</li></ol>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>docs\stages\01_ml_foundations.md</code> ·
+  SHA256 <code>3541b73073d5</code> ·
+  generated at 2026-08-17 08:11 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+<script>
+(function () {
+  const cards = Array.from(document.querySelectorAll('details.qa'));
+  const tools = document.querySelector('.study-tools');
+  if (!cards.length || !tools) return;
+  tools.hidden = false;
+
+  const storageKey = 'q2a-mastered-v1';
+  let mastered = new Set();
+  try { mastered = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]')); } catch (_) {}
+  const pathKey = location.pathname.replace(/\/$/, '') || '/';
+  const search = document.getElementById('qa-search');
+  const toggle = document.getElementById('toggle-unmastered');
+  const progress = document.getElementById('progress-text');
+  let onlyUnmastered = false;
+
+  function idFor(card, index) {
+    const summary = card.querySelector('summary').cloneNode(true);
+    const button = summary.querySelector('.master-btn');
+    if (button) button.remove();
+    return pathKey + '::' + index + '::' + summary.textContent.trim();
+  }
+  function save() {
+    try { localStorage.setItem(storageKey, JSON.stringify(Array.from(mastered))); } catch (_) {}
+  }
+  function refresh() {
+    const query = search.value.trim().toLowerCase();
+    let done = 0;
+    cards.forEach((card, index) => {
+      const id = idFor(card, index);
+      const isDone = mastered.has(id);
+      if (isDone) done += 1;
+      card.classList.toggle('is-mastered', isDone);
+      const matches = !query || card.textContent.toLowerCase().includes(query);
+      card.classList.toggle('is-filtered', !matches || (onlyUnmastered && isDone));
+      const button = card.querySelector('.master-btn');
+      if (button) {
+        button.classList.toggle('is-mastered', isDone);
+        button.textContent = isDone ? '✓ 已掌握' : '标记掌握';
+        button.setAttribute('aria-pressed', String(isDone));
+      }
+    });
+    progress.textContent = '本页 ' + done + ' / ' + cards.length + ' 已掌握';
+    toggle.textContent = onlyUnmastered ? '显示全部' : '只看未掌握';
+  }
+
+  cards.forEach((card, index) => {
+    const summary = card.querySelector('summary');
+    if (!summary) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'master-btn';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const id = idFor(card, index);
+      mastered.has(id) ? mastered.delete(id) : mastered.add(id);
+      save();
+      refresh();
+    });
+    summary.appendChild(button);
+  });
+  search.addEventListener('input', refresh);
+  toggle.addEventListener('click', function () { onlyUnmastered = !onlyUnmastered; refresh(); });
+  document.getElementById('collapse-all').addEventListener('click', function () {
+    cards.forEach(card => { card.open = false; });
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>

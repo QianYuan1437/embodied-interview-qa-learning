@@ -3,6 +3,8 @@ $ErrorActionPreference = 'Stop'
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $RepoRoot
 
+python tools/build_stage_pages.py
+
 python tools/render_html.py docs/learning/00_prerequisites.md `
   --out docs/learning/00_prerequisites.html `
   --title '具身智能最小前置知识' `
@@ -24,5 +26,12 @@ Get-ChildItem docs/interviews/*.md | ForEach-Object {
     --home-href '../index.html'
 }
 
-Write-Host 'Site rebuilt in docs/'
+Get-ChildItem docs/stages/*.md | ForEach-Object {
+  python tools/render_html.py $_.FullName `
+    --out ($_.FullName -replace '\.md$', '.html') `
+    --eyebrow 'ORDERED LEARNING · STAGE' `
+    --home-href '../roadmap.html' `
+    --home-label '← 返回学习路线'
+}
 
+Write-Host 'Site rebuilt in docs/'

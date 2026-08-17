@@ -381,6 +381,23 @@ details.qa.is-filtered { display: none; }
   line-height: 1.5;
 }
 .freq-hot { background: #fff1e6; color: #b8390e; border-color: #fcd9c0; }
+.seq {
+  display: inline-block;
+  min-width: 28px;
+  margin-right: 6px;
+  color: white;
+  background: var(--primary);
+  border-radius: 3px;
+  text-align: center;
+  font: 700 11px/1.7 "JetBrains Mono", monospace;
+}
+.origin {
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--ink-muted);
+  font: 600 10px/1.7 "JetBrains Mono", monospace;
+  letter-spacing: .03em;
+}
 
 mjx-container[display="true"] { margin: 12px 0 !important; }
 
@@ -420,7 +437,7 @@ footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--
 <div class="layout">
 
 <nav class="toc">
-  <a class="back-home" href="{{HOME_HREF}}">← 返回主册</a>
+  <a class="back-home" href="{{HOME_HREF}}">{{HOME_LABEL}}</a>
   <h3>{{TOC_LABEL}}</h3>
   {{TOC_HTML}}
 </nav>

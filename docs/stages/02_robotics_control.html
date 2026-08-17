@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阶段 2 · 机器人学与控制闭环</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="docs\stages\02_robotics_control.md">
+<meta name="aris:source-sha256" content="68f7e8817718f5e219f09b789484d17acc17077a6aabf37428b6b43115d6608d">
+<meta name="aris:generated-at" content="2026-08-17 08:11 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+nav.toc a.back-home {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+nav.toc a.back-home:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+details.qa { margin: 8px 0; }
+details.qa:hover { border-color: var(--primary-soft); box-shadow: 0 1px 4px rgba(26,74,140,0.06); }
+details summary {
+  cursor: pointer;
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  list-style: none;
+  user-select: none;
+}
+details.qa summary { color: var(--ink); }
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+  color: var(--primary);
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details[open].qa { background: #fdfcf7; }
+details > :not(summary) { padding: 10px 16px; }
+details p:first-of-type { margin-top: 8px; }
+details p:last-of-type { margin-bottom: 10px; }
+
+.study-tools {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+  padding: 10px;
+  background: rgba(253,252,247,0.96);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: 0 2px 10px rgba(26,74,140,0.08);
+  backdrop-filter: blur(8px);
+}
+.study-tools[hidden] { display: none; }
+.study-tools input[type="search"] {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+.study-tools button, .master-btn {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink-soft);
+  padding: 6px 9px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.study-tools button:hover, .master-btn:hover { border-color: var(--primary); color: var(--primary); }
+.study-tools .progress-text { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+.master-btn {
+  float: right;
+  margin: -2px 0 0 10px;
+  padding: 3px 8px;
+}
+.master-btn.is-mastered { background: var(--good-bg); border-color: #6ee7b7; color: var(--good); }
+details.qa.is-mastered { border-left: 4px solid var(--good); }
+details.qa.is-filtered { display: none; }
+
+/* difficulty pills: L1 green / L2 yellow / L3 red */
+.lv {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.lv-l1 { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.lv-l2 { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.lv-l3 { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* frequency badge: 🔥×N */
+.freq {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-soft);
+  color: var(--ink-soft);
+  border: 1px solid var(--border-soft);
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  vertical-align: 1px;
+  line-height: 1.5;
+}
+.freq-hot { background: #fff1e6; color: #b8390e; border-color: #fcd9c0; }
+.seq {
+  display: inline-block;
+  min-width: 28px;
+  margin-right: 6px;
+  color: white;
+  background: var(--primary);
+  border-radius: 3px;
+  text-align: center;
+  font: 700 11px/1.7 "JetBrains Mono", monospace;
+}
+.origin {
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--ink-muted);
+  font: 600 10px/1.7 "JetBrains Mono", monospace;
+  letter-spacing: .03em;
+}
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+  .study-tools { top: 0; margin-left: -4px; margin-right: -4px; }
+  .study-tools input[type="search"] { flex-basis: 100%; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <a class="back-home" href="../roadmap.html">← 返回学习路线</a>
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#第-1-步--从姿态与坐标变换开始">第 1 步 · 从姿态与坐标变换开始</a>
+</li>
+<li><a href="#第-2-步--从正运动学走到逆运动学">第 2 步 · 从正运动学走到逆运动学</a>
+</li>
+<li><a href="#第-3-步--把目标接入反馈控制">第 3 步 · 把目标接入反馈控制</a>
+</li>
+<li><a href="#第-4-步--最小手撕练习">第 4 步 · 最小手撕练习</a>
+</li>
+<li><a href="#阶段结束时怎么复习">阶段结束时怎么复习</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<div class="eyebrow">ORDERED LEARNING · STAGE</div>
+
+
+
+<div class="study-tools" hidden aria-label="学习工具">
+  <input id="qa-search" type="search" placeholder="搜索本页题目或关键词…" aria-label="搜索本页题目">
+  <button id="toggle-unmastered" type="button">只看未掌握</button>
+  <button id="collapse-all" type="button">全部折叠</button>
+  <span class="progress-text" id="progress-text"></span>
+</div>
+
+<h1 id="阶段-2--机器人学与控制闭环">阶段 2 · 机器人学与控制闭环</h1>
+<blockquote><p>从坐标表示到关节命令，建立动作真正落地的链路 本页由原八卷题库自动抽取完整问答，并严格按知识依赖排序。原卷仍是内容源。</p></blockquote>
+<p><strong>先修</strong>：阶段 0 的坐标系直觉，以及基本向量 / 矩阵运算。</p>
+<p><strong>本阶段共 13 题 · 通过标准</strong>：能解释末端移动目标如何经过坐标变换、IK 和反馈控制变成电机命令。</p>
+<p><a href="01_ml_foundations.html">← 上一步</a> · <a href="../roadmap.html">返回总路线</a> · <a href="03_rl_backbone.html">下一步 →</a></p>
+<hr />
+<h2 id="第-1-步--从姿态与坐标变换开始">第 1 步 · 从姿态与坐标变换开始</h2>
+<blockquote><p>任何运动学问题都先明确相对坐标系。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">01</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×12</span> <b>Q35</b> · 旋转矩阵、欧拉角、四元数三种姿态表示的区别和联系？</summary>
+<p><strong>答</strong>：</p>
+<table><thead><tr><th>表示</th><th>参数数</th><th>优点</th><th>缺点</th></tr></thead><tbody><tr><td>旋转矩阵 $R \in SO(3)$</td><td>9（实际 3 自由度）</td><td>无奇异、组合简单（矩阵乘法）</td><td>冗余参数，存储/传输大</td></tr><tr><td>欧拉角（roll/pitch/yaw）</td><td>3</td><td>直观（人类可理解）</td><td><strong>万向节死锁</strong>（Gimbal Lock），依赖轴顺序</td></tr><tr><td>四元数 $q = [w,x,y,z]$，$\|q\|=1$</td><td>4（实际 3 自由度）</td><td>无奇异、插值平滑（SLERP）、计算高效</td><td>不直观，有双倍映射（$q$ 和 $-q$ 表示同一转）</td></tr></tbody></table>
+<p><strong>联系</strong>：三者等价，可互相转换（旋转矩阵 ↔ 四元数 ↔ 轴角 ↔ 欧拉角）。</p>
+<p><strong>机器人实践</strong>：运动规划/插值用四元数；人机界面 / 调试显示用欧拉角；姿态矩阵运算用旋转矩阵；神经网络输出姿态通常用 6D 旋转表示（$R$ 的前两列）或四元数。</p>
+<p><strong>易错</strong>：欧拉角的旋转顺序（ZYX vs XYZ vs ZYZ）不同结果完全不同——拿到欧拉角必须确认约定；Gimbal Lock 发生在 pitch = ±90° 时 roll 和 yaw 轴重合。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">02</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×10</span> <b>Q36</b> · 齐次变换矩阵（Homogeneous Transformation Matrix）是什么？如何用它表示坐标系变换？</summary>
+<p><strong>答</strong>：<strong>齐次变换矩阵</strong> $T \in SE(3)$，将旋转 $R$ 和平移 $p$ 合并为 4×4 矩阵：</p>
+<p>$$T = \begin{bmatrix} R_{3\times3} &amp; p_{3\times1} \\ 0_{1\times3} &amp; 1 \end{bmatrix}$$</p>
+<p><strong>坐标变换</strong>：若点在 frame B 中坐标为 $\tilde{q}_B = [x, y, z, 1]^\top$，在 frame A 中：$\tilde{q}_A = {}^A T_B \cdot \tilde{q}_B$。</p>
+<p><strong>链式组合</strong>：多个变换可直接矩阵连乘：${}^0 T_n = {}^0 T_1 \cdot {}^1 T_2 \cdots {}^{n-1} T_n$（正向运动学本质）。</p>
+<p><strong>逆变换</strong>：$T^{-1} = \begin{bmatrix} R^\top &amp; -R^\top p \\ 0 &amp; 1 \end{bmatrix}$，旋转部分取转置（正交矩阵性质）。</p>
+<p><strong>易错</strong>：旋转矩阵的逆是其转置（$R^{-1} = R^\top$），但整个齐次矩阵的逆<strong>不是</strong>直接转置 $T^\top$（平移部分要另外处理）。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">03</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×9</span> <b>Q37</b> · D-H 参数法（Denavit-Hartenberg）是什么？四个参数各代表什么？</summary>
+<p><strong>答</strong>：D-H 参数法是用<strong>最少 4 个参数</strong>描述相邻关节坐标系变换的标准化方法：</p>
+<table><thead><tr><th>参数</th><th>含义</th><th>变化/固定</th></tr></thead><tbody><tr><td>$\theta_i$（关节角）</td><td>绕 $Z_{i-1}$ 轴的旋转角</td><td><strong>旋转关节变量</strong>（固定关节为常数）</td></tr><tr><td>$d_i$（连杆偏距）</td><td>沿 $Z_{i-1}$ 轴的平移距离</td><td><strong>移动关节变量</strong>（旋转关节为常数）</td></tr><tr><td>$a_i$（连杆长度）</td><td>沿 $X_i$ 轴的距离（$Z_{i-1}$ 到 $Z_i$ 的公垂线长）</td><td>固定（几何参数）</td></tr><tr><td>$\alpha_i$（连杆扭转角）</td><td>绕 $X_i$ 轴从 $Z_{i-1}$ 转到 $Z_i$ 的角度</td><td>固定（几何参数）</td></tr></tbody></table>
+<p><strong>正运动学</strong>：给定所有关节变量 $\theta_i$（或 $d_i$），连乘 $T_i$ 得末端位姿：${}^0 T_n = \prod_{i=1}^n {}^{i-1}T_i$。</p>
+<p><strong>两种约定</strong>：标准 D-H（Craig） vs 改进 D-H（MDH / Spong）参数定义顺序略有不同，拿到参数表必须确认约定。</p>
+<p><strong>易错</strong>：标准 D-H 每帧 $X_i$ 沿公垂线方向，并不是"随便放"；如果机器人有平行或相交关节轴，D-H 坐标系有歧义，需额外约定。</p>
+</details>
+<hr />
+<h2 id="第-2-步--从正运动学走到逆运动学">第 2 步 · 从正运动学走到逆运动学</h2>
+<blockquote><p>雅可比连接关节速度与末端速度，也是数值 IK 的核心。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">04</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×11</span> <b>Q39</b> · 雅可比矩阵（Jacobian）是什么？奇异性是怎么产生的？</summary>
+<p><strong>答</strong>：$J(\theta) \in \mathbb{R}^{6 \times n}$ 把关节速度映射到末端速度：$\dot{x} = J\dot{\theta}$。上 3 行线速度 $J_v$，下 3 行角速度 $J_\omega$。旋转关节 $i$：$J_v^{(i)} = z_{i-1} \times (p_n - p_{i-1})$，$J_\omega^{(i)} = z_{i-1}$。</p>
+<p><strong>奇异性</strong>：$J$ 行秩降低（不满秩）时某些末端运动方向不可达（或需无穷大关节速度）。典型：手腕三轴共线、连杆完全伸直。此时 Moore-Penrose 伪逆病态（满行秩情况下 $J^\dagger = J^\top(JJ^\top)^{-1}$）→ 关节速度爆炸。</p>
+<p><strong>缓解</strong>：① 阻尼最小二乘（DLS）：$J^\dagger_{dls} = J^\top(JJ^\top + \lambda I)^{-1}$，$\lambda$ 引入阻尼，用精度换稳定；② 路径规划提前绕开奇异形位；③ 控制层限速。</p>
+<p><strong>易错</strong>：6-DOF 方阵 $J$ 直接取逆仅在满秩时有效；7-DOF 冗余臂 $J \in \mathbb{R}^{6 \times 7}$ 必须用伪逆，存在无穷多解，需加零空间约束来选优。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">05</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×9</span> <b>Q38</b> · 逆运动学（IK）的解析解和数值解各有什么优劣？哪种更常用于 VLA 策略执行？</summary>
+<p><strong>答</strong>：</p>
+<p><strong>解析解（Analytical IK）</strong>：</p>
+<ul><li>对特殊构型（如满足 Pieper 准则：3 轴交于一点的 6-DOF 机器人）可求闭式解；</li><li>优点：速度极快（毫秒级）、确定性强；</li><li>缺点：仅适用于特定构型，通用性差，解可能有多解需选优。</li></ul>
+<p><strong>数值解（Numerical IK）</strong>：</p>
+<ul><li>基于雅可比矩阵的迭代法（梯度下降 / Newton-Raphson / Damped Least Squares）；</li><li>优点：通用（任意构型）、可加约束（关节限位、奇异回避）；</li><li>缺点：迭代耗时（ms 到 tens of ms），可能陷入局部最优，初值敏感。</li></ul>
+<p><strong>VLA 策略</strong>：不同 VLA 的动作空间不同——OpenVLA 官方动作空间是<strong>末端执行器 7 维增量</strong>（$\Delta x, \Delta y, \Delta z, \Delta$roll, $\Delta$pitch, $\Delta$yaw + gripper），底层执行层需要 IK/OSC（操作空间控制）将其转换为关节指令。部分 VLA 直接输出关节角度，不需要 IK。<strong>结论</strong>：VLA 动作空间因模型而异，不能一概而论；但相比传统离线规划，VLA 的 IK 调用是实时嵌在控制循环中的。</p>
+<p><strong>易错</strong>：7-DOF 冗余机械臂有无穷多 IK 解（冗余自由度），需加零空间运动（null space motion）约束来选择"最优"解（如避开奇异形位）。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">06</span> <span class="origin">卷一</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×6</span> <b>Q43</b> · 什么是工作空间（Workspace）？奇异形位和工作空间边界有什么关系？</summary>
+<p><strong>答</strong>：<strong>工作空间</strong>：机器人末端执行器能到达的所有<strong>位置</strong>集合（注：完整意义的可达性还需考虑姿态约束）。分：</p>
+<ul><li><strong>可达工作空间</strong>（Reachable）：至少以某一姿态能到达的位置集合；</li><li><strong>灵巧工作空间</strong>（Dexterous）：以任意姿态都能到达的位置集合（往往小得多）。</li></ul>
+<p><strong>与奇异形位的关系</strong>：位置工作空间<strong>边界</strong>通常恰好是奇异形位（完全伸展或极度折叠）——此时 Jacobian 降秩，末端某方向运动需无穷大关节速度。内奇异点（如腕部奇异）在工作空间内部也可能存在。</p>
+<p><strong>机器人设计取舍</strong>：7-DOF 冗余臂扩大灵巧工作空间 + 提供零空间运动绕奇异，但增加控制复杂度。</p>
+<p><strong>易错</strong>：灵巧工作空间既受位置限制又受姿态约束，两者分开分析；可达工作空间描述的是位置可达性，不自动保证任意姿态下的可达性。</p>
+</details>
+<hr />
+<h2 id="第-3-步--把目标接入反馈控制">第 3 步 · 把目标接入反馈控制</h2>
+<blockquote><p>区分控制空间，再理解 PID、阻抗与频率边界。</p></blockquote>
+<details class="qa">
+<summary><span class="seq">07</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×7</span> <b>Q41</b> · 关节空间控制和任务空间（笛卡尔）控制的区别？各适合什么场景？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>关节空间控制</strong>：控制目标是关节角度/速度 $\theta$，PD 控制在关节空间运行，无需 IK。<strong>优点</strong>：简单稳定、无奇异问题；<strong>缺点</strong>：末端路径不直（关节线性插值 ≠ 笛卡尔直线）。</li><li><strong>任务空间（Cartesian）控制</strong>：控制目标是末端位姿 $x$，需通过 Jacobian 或 IK 转换到关节空间。<strong>优点</strong>：末端路径可控（直线/圆弧）、易与视觉感知对接；<strong>缺点</strong>：奇异点附近不稳定，需 IK 计算开销。</li></ul>
+<p><strong>适合场景</strong>：</p>
+<ul><li>Pick-and-place、点到点运动 → 关节空间够用</li><li>精密装配（要求末端走直线）、力控 → 任务空间</li><li>VLA 策略输出 → 因模型而异（OpenVLA 为末端增量、需底层 IK；部分模型直接输出关节角）</li></ul>
+<p><strong>易错</strong>："笛卡尔控制"不等于"不需要 IK"——只是 IK 在每个控制循环内完成（数值迭代），且控制频率要够高（&gt;100 Hz）才能近实时。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">08</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×8</span> <b>Q40</b> · PID 控制的三个参数各起什么作用？机器人关节 PID 调参时的典型问题？</summary>
+<p><strong>答</strong>：<strong>PID</strong>：$u(t) = K_P e(t) + K_I \int e \,dt + K_D \dot{e}(t)$，$e = q_{desired} - q_{actual}$（关节角误差）。</p>
+<ul><li><strong>$K_P$（比例）</strong>：误差大则控制量大；太大 → 震荡；太小 → 稳态误差大。</li><li><strong>$K_I$（积分）</strong>：消除稳态误差（gravity compensation 不完美时的偏置）；太大 → 积分饱和（windup），超调 + 慢恢复。</li><li><strong>$K_D$（微分）</strong>：阻尼，预测趋势提前减速；太大 → 对噪声极敏感（放大高频噪声）；关节位置传感器有噪声时慎用大 $K_D$。</li></ul>
+<p><strong>机器人典型问题</strong>：</p>
+<ul><li>负载变化（搬不同重物）→ 有效惯量变化 → 固定 PID 参数可能失稳，需自适应控制或惯量辨识。</li><li>重力补偿不完整 → 靠 $K_I$ 修正，易积分饱和。</li><li>柔性关节（弹性）→ 纯 PID 可能激发弹性振动，需加低通滤波或更高级控制（如弹性关节模型控制）。</li></ul>
+<p><strong>易错</strong>：PID 是线性控制器，机器人动力学非线性（惯量、离心力、科里奥利力、重力随形位变化）；PID 在工作点附近可用，大范围运动需非线性补偿或现代控制。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">09</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×6</span> <b>Q42</b> · 阻抗控制（Impedance Control）和力控制的区别？具身机器人什么时候用力控？</summary>
+<p><strong>答</strong>：</p>
+<ul><li><strong>纯位置控制</strong>：仅跟踪位置目标，接触时力无法限制（硬接触易损伤）。</li><li><strong>力控制（Force Control）</strong>：直接控制接触力，需要力/力矩传感器或力矩估计；精度高但刚性差（力变化时位置漂移）。</li><li><strong>阻抗控制</strong>：在期望位置轨迹上叠加弹簧-阻尼模型 $F = K(x_d - x) + B(\dot{x}_d - \dot{x})$，<strong>将力偏差转化为位置偏差允许</strong>；不需要显式力控制器，只要能控制关节力矩或末端位置。</li></ul>
+<p><strong>具身机器人使用场景</strong>：</p>
+<ul><li>装配（轴孔配合/插拔连接器）：位置不确定时力控防止过载 → <strong>阻抗/力控</strong></li><li>拧螺丝/研磨打磨：需要恒定接触力 → <strong>力控</strong></li><li>普通 pick-and-place（抓轻物）：位置控制即可</li><li>人机协作（安全要求）：阻抗控制让机器人"柔软"，碰到人自动退让</li></ul>
+<p><strong>易错</strong>：阻抗控制中 $K$（刚度）高 ≈ 位置控制；$K$ 低 ≈ 力控；调 $K/B$ 是在"硬度"和"力控精度"间权衡，不是随意设。</p>
+</details>
+<details class="qa">
+<summary><span class="seq">10</span> <span class="origin">卷一</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×5</span> <b>Q44</b> · 机器人控制频率（Control Frequency）的要求是什么？VLA 策略频率低有什么影响？</summary>
+<p><strong>答</strong>：<strong>基本要求</strong>：控制频率需远高于系统最高频动态（奈奎斯特采样定理），一般：</p>
+<ul><li>关节 PD 控制：<strong>1 kHz</strong>（高刚度电机）或 <strong>500 Hz</strong>（标准）</li><li>力控 / 阻抗控制：<strong>100-500 Hz</strong>（力传感器带宽）</li><li>视觉反馈（闭环）：<strong>30-100 Hz</strong>（摄像头帧率限制）</li></ul>
+<p><strong>VLA 策略频率低的影响</strong>：OpenVLA 在 Franka-Tabletop 约 <strong>5 Hz</strong>（串行 AR 解码 7 token），部分部署平台可达 15 Hz，大部分 VLA 在 5-25 Hz。</p>
+<ul><li><strong>安全风险</strong>：高动态任务（抓运动物体、避碰）控制环太慢，实际执行与规划脱节；</li><li><strong>Action Chunking</strong>（关键解法）：一次预测 K 步动作（如 K=10/20/50）并缓存，底层控制器以高频插值执行，策略只需低频推理；</li><li><strong>π0</strong>：用独立 Action Expert（Flow Matching，H=50 chunk）以约 50 Hz 频率输出动作，VLM 低频提供上下文理解；<strong>GR00T-N1</strong> 类似思路（Flow Matching action chunk），具体控制频率因机器人平台而异。</li></ul>
+<p><strong>易错</strong>：控制频率和推理频率是两层：VLA 推理 10 Hz，但底层 PD 控制仍跑 1 kHz；两层解耦是工程关键。</p>
+</details>
+<hr />
+<h2 id="第-4-步--最小手撕练习">第 4 步 · 最小手撕练习</h2>
+<blockquote><p>用代码把变换、数值 IK 与 PID 连成可执行链路。</p></blockquote>
+<details class="qa qa-handcoding">
+<summary><span class="seq">11</span> <span class="origin">卷六</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×5</span> <b>✍ CH09</b> · 手撕齐次变换 / DH 正向运动学</summary>
+<p><strong>考察点</strong>：齐次矩阵 T = [R, p; 0, 1]；DH 4 参数 (a, α, d, θ)；本实现用改进 DH（Craig），与标准 DH（Spong）矩阵形式不同；FK 由 T 连乘。</p>
+<p><strong>实现</strong>：</p>
+<pre><code class="language-python">import numpy as np
+
+def dh_link(a, alpha, d, theta):
+    # 改进 DH（Craig）：T_i^{i-1} = Rot_x(α_{i-1})·Trans_x(a_{i-1})·Rot_z(θ_i)·Trans_z(d_i)
+    ct, st = np.cos(theta), np.sin(theta)
+    ca, sa = np.cos(alpha), np.sin(alpha)
+    return np.array([
+        [ct,       -st,       0.0,   a],
+        [st * ca,  ct * ca,  -sa,   -sa * d],
+        [st * sa,  ct * sa,   ca,    ca * d],
+        [0.0,      0.0,       0.0,   1.0],
+    ])
+
+def fk(dh_params, q):
+    # dh_params: [(a, alpha, d, theta_offset), ...]；q: 关节角向量
+    T = np.eye(4)
+    for (a, alpha, d, theta_off), qi in zip(dh_params, q):
+        T = T @ dh_link(a, alpha, d, theta_off + qi)
+    # 末端位姿：左上 3×3 为 R，右上 3×1 为 p
+    return T   # T[:3,:3] = R_end, T[:3,3] = p_end</code></pre>
+<p><strong>易错</strong>：Craig 与 Spong 不可整链混用（前者坐标系固定在近端、Rot_x 先做；后者固定在远端、Rot_z 先做）；连乘顺序应 base → end。</p>
+</details>
+<details class="qa qa-handcoding">
+<summary><span class="seq">12</span> <span class="origin">卷六</span> <span class="lv lv-l2">L2</span> <span class="freq">🔥×6</span> <b>✍ CH07</b> · 手撕数值 IK（Jacobian 伪逆 / DLS）</summary>
+<p><strong>考察点</strong>：循环 残差→Jacobian→Δq→更新；伪逆奇异处发散；DLS 加阻尼防爆炸；步长 clamp。</p>
+<p><strong>实现</strong>：</p>
+<pre><code class="language-python">import numpy as np
+
+def ik_dls(fk, jac, q0, x_target, lam=0.05, alpha=0.5,
+           tol=1e-4, max_iter=200, dq_max=0.2):
+    # fk(q) → 末端位姿向量；jac(q) → 雅可比 (m×n)
+    q = q0.copy()
+    for _ in range(max_iter):
+        e = x_target - fk(q)
+        if np.linalg.norm(e) &lt; tol:
+            return q, True
+        J = jac(q)
+        # Damped Least Squares：J⁺_DLS = J&#x27;·(J·J&#x27; + λ²·I)^{-1}，奇异处仍数值稳
+        JJt = J @ J.T
+        damp = (lam ** 2) * np.eye(JJt.shape[0])
+        dq = J.T @ np.linalg.solve(JJt + damp, e)
+        # 步长 clamp 防单步过大震荡 / 跨越奇异
+        n = np.linalg.norm(dq)
+        if n &gt; dq_max:
+            dq *= dq_max / n
+        q = q + alpha * dq
+    return q, False</code></pre>
+<p><strong>易错</strong>：奇异附近用纯伪逆 → 关节速度爆炸；α 过大震荡发散、过小收敛慢；忽略关节限位（重活岗会追问 weighted clamping / null-space）。</p>
+</details>
+<details class="qa qa-handcoding">
+<summary><span class="seq">13</span> <span class="origin">卷六</span> <span class="lv lv-l1">L1</span> <span class="freq">🔥×9</span> <b>✍ CH01</b> · 手撕位置型 / 增量型 PID</summary>
+<p><strong>考察点</strong>：PID 三项物理意义；位置型 vs 增量型公式差异；离散化 dt 处理；D 项放反馈避免设定值阶跃尖峰。</p>
+<p><strong>实现</strong>：</p>
+<pre><code class="language-python">class PID:
+    def __init__(self, Kp, Ki, Kd, dt):
+        self.Kp, self.Ki, self.Kd, self.dt = Kp, Ki, Kd, dt
+        self.integral = 0.0
+        self.prev_err = 0.0      # e(k-1)
+        self.prev_prev_err = 0.0 # e(k-2)，增量型 D 项要
+        self.prev_meas = 0.0     # 位置型 D 项放反馈量
+
+    def position(self, sp, y):
+        # 位置型：u(k) = Kp·e + Ki·Σe·dt + Kd·(-Δy/dt)
+        e = sp - y
+        self.integral += e * self.dt
+        d = -(y - self.prev_meas) / self.dt   # 反馈微分，避免设定值阶跃尖峰
+        self.prev_meas = y
+        return self.Kp * e + self.Ki * self.integral + self.Kd * d
+
+    def incremental(self, sp, y):
+        # 增量型：Δu = Kp·(e-e₁) + Ki·e·dt + Kd·(e-2e₁+e₂)/dt
+        e = sp - y
+        du = (self.Kp * (e - self.prev_err)
+              + self.Ki * e * self.dt
+              + self.Kd * (e - 2 * self.prev_err + self.prev_prev_err) / self.dt)
+        self.prev_prev_err, self.prev_err = self.prev_err, e
+        return du   # 累加到上一步 u 上由调用方负责</code></pre>
+<p><strong>易错</strong>：位置型必须配 anti-windup（→ CH02）；增量型需保存 e(k-2) 才能算 D；D 项放误差时 setpoint 阶跃 → 微分尖峰，工程上一律放反馈量。</p>
+</details>
+<hr />
+<h2 id="阶段结束时怎么复习">阶段结束时怎么复习</h2>
+<ol><li>点击“全部折叠”，只看题目口述答案。</li><li>能说出答案后标记“已掌握”；不要因为“看懂了”就标记。</li><li>第二天使用“只看未掌握”，第 7 天再完整复述一次。</li><li>回到<a href="../roadmap.html">总学习路线</a>，检查通过标准后再进入下一阶段。</li></ol>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>docs\stages\02_robotics_control.md</code> ·
+  SHA256 <code>68f7e8817718</code> ·
+  generated at 2026-08-17 08:11 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+<script>
+(function () {
+  const cards = Array.from(document.querySelectorAll('details.qa'));
+  const tools = document.querySelector('.study-tools');
+  if (!cards.length || !tools) return;
+  tools.hidden = false;
+
+  const storageKey = 'q2a-mastered-v1';
+  let mastered = new Set();
+  try { mastered = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]')); } catch (_) {}
+  const pathKey = location.pathname.replace(/\/$/, '') || '/';
+  const search = document.getElementById('qa-search');
+  const toggle = document.getElementById('toggle-unmastered');
+  const progress = document.getElementById('progress-text');
+  let onlyUnmastered = false;
+
+  function idFor(card, index) {
+    const summary = card.querySelector('summary').cloneNode(true);
+    const button = summary.querySelector('.master-btn');
+    if (button) button.remove();
+    return pathKey + '::' + index + '::' + summary.textContent.trim();
+  }
+  function save() {
+    try { localStorage.setItem(storageKey, JSON.stringify(Array.from(mastered))); } catch (_) {}
+  }
+  function refresh() {
+    const query = search.value.trim().toLowerCase();
+    let done = 0;
+    cards.forEach((card, index) => {
+      const id = idFor(card, index);
+      const isDone = mastered.has(id);
+      if (isDone) done += 1;
+      card.classList.toggle('is-mastered', isDone);
+      const matches = !query || card.textContent.toLowerCase().includes(query);
+      card.classList.toggle('is-filtered', !matches || (onlyUnmastered && isDone));
+      const button = card.querySelector('.master-btn');
+      if (button) {
+        button.classList.toggle('is-mastered', isDone);
+        button.textContent = isDone ? '✓ 已掌握' : '标记掌握';
+        button.setAttribute('aria-pressed', String(isDone));
+      }
+    });
+    progress.textContent = '本页 ' + done + ' / ' + cards.length + ' 已掌握';
+    toggle.textContent = onlyUnmastered ? '显示全部' : '只看未掌握';
+  }
+
+  cards.forEach((card, index) => {
+    const summary = card.querySelector('summary');
+    if (!summary) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'master-btn';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const id = idFor(card, index);
+      mastered.has(id) ? mastered.delete(id) : mastered.add(id);
+      save();
+      refresh();
+    });
+    summary.appendChild(button);
+  });
+  search.addEventListener('input', refresh);
+  toggle.addEventListener('click', function () { onlyUnmastered = !onlyUnmastered; refresh(); });
+  document.getElementById('collapse-all').addEventListener('click', function () {
+    cards.forEach(card => { card.open = false; });
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>
